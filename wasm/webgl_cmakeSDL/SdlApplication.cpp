@@ -2,7 +2,7 @@
 #include <iostream>
 #include <utility>
 #include "GraphicsManager.hpp"
-#include "InputManager.hpp"
+// #include "InputManager.hpp"
 
 /*
  * Recurse through the list of arguments to clean up, cleaning up
@@ -91,39 +91,39 @@ void SdlApplication::Tick() {
     SDL_Event e;
 
     while (SDL_PollEvent(&e)) {
-        switch (e.type) {
-            case SDL_QUIT:
-                RequestQuit();
-                break;
-            case SDL_KEYDOWN:
-                break;
-            case SDL_KEYUP: {
-                g_pInputManager->AsciiKeyDown(static_cast<char>(e.key.keysym.sym));
-            } break;
-            case SDL_MOUSEBUTTONDOWN: {
-                if (e.button.button == SDL_BUTTON_LEFT) {
-                    g_pInputManager->LeftMouseButtonDown();
-                    m_bInDrag = true;
-                }
-            } break;
-            case SDL_MOUSEBUTTONUP: {
-                if (e.button.button == SDL_BUTTON_LEFT) {
-                    g_pInputManager->LeftMouseButtonUp();
-                    m_bInDrag = false;
-                }
-            } break;
-            case SDL_MOUSEMOTION: {
-                if (m_bInDrag) {
-                    g_pInputManager->LeftMouseDrag(e.motion.xrel, e.motion.yrel);
-                }
-            } break;
-            case SDL_WINDOWEVENT:
-                if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-                    int tmpX, tmpY;
-                    SDL_GetWindowSize(m_pWindow, &tmpX, &tmpY);
-                    onResize(tmpX, tmpY);
-                }
-        }
+        // switch (e.type) {
+        //     case SDL_QUIT:
+        //         RequestQuit();
+        //         break;
+        //     case SDL_KEYDOWN:
+        //         break;
+        //     case SDL_KEYUP: {
+        //         g_pInputManager->AsciiKeyDown(static_cast<char>(e.key.keysym.sym));
+        //     } break;
+        //     case SDL_MOUSEBUTTONDOWN: {
+        //         if (e.button.button == SDL_BUTTON_LEFT) {
+        //             g_pInputManager->LeftMouseButtonDown();
+        //             m_bInDrag = true;
+        //         }
+        //     } break;
+        //     case SDL_MOUSEBUTTONUP: {
+        //         if (e.button.button == SDL_BUTTON_LEFT) {
+        //             g_pInputManager->LeftMouseButtonUp();
+        //             m_bInDrag = false;
+        //         }
+        //     } break;
+        //     case SDL_MOUSEMOTION: {
+        //         if (m_bInDrag) {
+        //             g_pInputManager->LeftMouseDrag(e.motion.xrel, e.motion.yrel);
+        //         }
+        //     } break;
+        //     case SDL_WINDOWEVENT:
+        //         if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+        //             int tmpX, tmpY;
+        //             SDL_GetWindowSize(m_pWindow, &tmpX, &tmpY);
+        //             onResize(tmpX, tmpY);
+        //         }
+        // }
     }
 }
 
