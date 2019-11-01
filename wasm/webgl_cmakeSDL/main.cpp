@@ -30,13 +30,12 @@ int main(int argc, char **argv) {
         cerr << "Failed. err = " << ret;
         return ret;
     }
+    g_pApp->CreateMainWindow();
 
     if ((ret = g_pGraphicsManager->Initialize()) != 0) {
         cerr << "Failed. err = " << ret;
         return ret;
     }
-
-    g_pApp->CreateMainWindow();
 
     loop = [&] {
         g_pApp->Tick();

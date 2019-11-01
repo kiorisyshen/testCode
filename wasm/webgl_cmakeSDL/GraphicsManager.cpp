@@ -7,9 +7,9 @@
 
 #include <GLES3/gl32.h>
 
-#define GLAD_GL_ARB_compute_shader 0
-
 #include <GLES2/gl2ext.h>
+
+#define GLAD_GL_ARB_compute_shader 0
 
 using namespace newbieGE;
 using namespace std;
@@ -95,7 +95,7 @@ static void OutputLinkerErrorMessage(unsigned int programId) {
     cerr << "Error compiling linker.  Check linker-error.txt for message." << endl;
 }
 
-static bool LoadShaderFromFile(const char *filename, const GLenum shaderType, GLuint &shader) {
+static bool LoadShaderFromFile(const string filename, const GLenum shaderType, GLuint &shader) {
     std::string cbufferShaderBuffer;
     std::string commonShaderBuffer;
     std::string shaderBuffer;
@@ -145,7 +145,7 @@ static bool LoadShaderFromFile(const char *filename, const GLenum shaderType, GL
     glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
     if (status != 1) {
         // If it did not compile then write the syntax error message out to a text file for review.
-        OutputShaderErrorMessage(shader, filename);
+        OutputShaderErrorMessage(shader, filename.c_str());
         return false;
     }
 
@@ -162,7 +162,7 @@ static bool LoadShaderProgram(const ShaderSourceList &source, GLuint &shaderProg
 
     for (auto it = source.cbegin(); it != source.cend(); it++) {
         GLuint shader;
-        status = LoadShaderFromFile(it->second.c_str(), it->first, shader);
+        status = LoadShaderFromFile(it->second, it->first, shader);
         if (!status) {
             return false;
         }
@@ -207,6 +207,12 @@ bool GraphicsManager::InitializeShaders() {
 
 int GraphicsManager::Initialize() {
     int result = 0;
+
+    std::cout << "[OpenGL] " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "[Vendor] " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "[Renderer] " << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "[GLSL] " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    std::cout << "[Extensions] " << glGetString(GL_EXTENSIONS) << std::endl;
 
     bool initShaderSucc = InitializeShaders();
     if (!initShaderSucc) result = -1;

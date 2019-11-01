@@ -132,8 +132,8 @@ void SdlApplication::Tick() {
 }
 
 void SdlApplication::CreateMainWindow() {
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, m_Config.redBits);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, m_Config.blueBits);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, m_Config.greenBits);

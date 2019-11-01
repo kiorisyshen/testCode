@@ -27,6 +27,16 @@ SdlApplication.cpp
 
 # target_link_libraries(testWebGL)
 
+add_custom_target(basicAssets ALL
+        python $ENV{EMSCRIPTEN}/tools/file_packager.py ${CMAKE_CURRENT_BINARY_DIR}/Asset.data 
+            --lz4
+            --no-heap-copy
+            --js-output=${CMAKE_CURRENT_BINARY_DIR}/Asset.preload.js 
+            --preload Shaders
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        VERBATIM
+            )
+
 set_target_properties(testWebGL
-PROPERTIES LINK_FLAGS "-s FULL_ES2=1 -s FULL_ES3=1 -s USE_WEBGL2=1 -s USE_SDL=2 -s DEMANGLE_SUPPORT=1"
+PROPERTIES LINK_FLAGS "-s FULL_ES2=1 -s FULL_ES3=1 -s USE_WEBGL2=1 -s USE_SDL=2 -s DEMANGLE_SUPPORT=1 --shell-file ${CMAKE_CURRENT_SOURCE_DIR}/Editor.html"
 )
