@@ -19,14 +19,6 @@ int BaseApplication::Initialize() {
     return ret;
 }
 
-// Finalize all sub modules and clean up all runtime temporary files.
-void BaseApplication::Finalize() {
-}
-
-// One cycle of the main loop
-void BaseApplication::Tick() {
-}
-
 void BaseApplication::SetCommandLineParameters(int argc, char **argv) {
     m_nArgC  = argc;
     m_ppArgV = argv;

@@ -6,9 +6,9 @@ class BaseApplication {
    public:
     BaseApplication(GfxConfiguration &cfg);
     virtual int Initialize();
-    virtual void Finalize();
+    virtual void Finalize() = 0;
     // One cycle of the main loop
-    virtual void Tick();
+    virtual void Tick() = 0;
 
     void SetCommandLineParameters(int argc, char **argv);
     int GetCommandLineArgumentsCount() const;
@@ -23,11 +23,8 @@ class BaseApplication {
         return m_Config;
     };
 
-    virtual void CreateMainWindow() {
-    }
-    virtual void *GetMainWindowHandler() {
-        return nullptr;
-    }
+    virtual void CreateMainWindow()      = 0;
+    virtual void *GetMainWindowHandler() = 0;
 
    protected:
     // Flag if need quit the main loop of the application

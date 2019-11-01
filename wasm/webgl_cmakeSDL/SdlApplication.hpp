@@ -9,9 +9,9 @@ class SdlApplication : public BaseApplication {
     using BaseApplication::BaseApplication;
 
     int Initialize() override;
-    void Finalize() override;
+    void Finalize() final;
     // One cycle of the main loop
-    void Tick() override;
+    void Tick() final;
 
     void *GetMainWindowHandler() override {
         return m_pWindow;
@@ -26,5 +26,6 @@ class SdlApplication : public BaseApplication {
     SDL_Window *m_pWindow;
 
     bool m_bInDrag = false;
+    SDL_GLContext m_hContext;
 };
 }  // namespace newbieGE

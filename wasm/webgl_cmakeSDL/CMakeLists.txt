@@ -17,9 +17,13 @@ add_executable(testWebGL
 main.cpp
 BaseApplication.cpp
 GraphicsManager.cpp
-OpenGLApplication.cpp
 SdlApplication.cpp
 )
+
+# target_link_libraries(testWebGL
+#     SDL2::SDL2main
+#     SDL2::SDL2
+# )
 
 # target_link_libraries(testWebGL)
 

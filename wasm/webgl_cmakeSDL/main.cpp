@@ -9,7 +9,7 @@ void main_loop() {
     loop();
 }
 
-#include "OpenGLApplication.cpp"
+#include "SdlApplication.hpp"
 
 #include "GraphicsManager.hpp"
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     int ret;
 
     GfxConfiguration config(8, 8, 8, 8, 24, 8, 0, 960, 540, "NewbieGameEngine Editor");
-    BaseApplication *g_pApp = static_cast<BaseApplication *>(new OpenGLApplication(config));
+    BaseApplication *g_pApp = static_cast<BaseApplication *>(new SdlApplication(config));
 
     GraphicsManager *g_pGraphicsManager = static_cast<GraphicsManager *>(new GraphicsManager);
 

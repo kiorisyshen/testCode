@@ -111,19 +111,24 @@ static bool LoadShaderFromFile(const char *filename, const GLenum shaderType, GL
 
     if (filename == VS_BASIC_SOURCE_FILE) {
         shaderBuffer =
-            "attribute vec4 vPosition;    \n"
+            "#version 300 es\n"
+            "in vec4 position;    \n"
             "void main()                  \n"
             "{                            \n"
-            "   gl_Position = vPosition;  \n"
+            "   gl_Position = vec4(position.xyz, 1.0);  \n"
             "}                            \n";
-    }
-    if (filename == PS_BASIC_SOURCE_FILE) {
+    } else if (filename == PS_BASIC_SOURCE_FILE) {
         shaderBuffer =
+            "#version 300 es\n"
             "precision mediump float;\n"
+            "out vec4 color;\n"
             "void main()                                  \n"
             "{                                            \n"
-            "  gl_FragColor = vec4 ( 1.0, 0.0, 0.0, 1.0 );\n"
+            "  color = vec4 (0.4, 0.8, 0.2, 1.0 );\n"
             "}                                            \n";
+    } else {
+        std::cout << "Unsupported shader file." << std::endl;
+        assert(0);
     }
 
     // Create a shader object.
