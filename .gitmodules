@@ -1,0 +1,3 @@
+[submodule "wasm/ThirdParty/src/SDL"]
+	path = wasm/ThirdParty/src/SDL
+	url = https://github.com/kiorisyshen/SDL.git
