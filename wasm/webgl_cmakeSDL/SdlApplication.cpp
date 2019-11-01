@@ -93,47 +93,47 @@ void SdlApplication::Tick() {
     SDL_Event e;
 
     while (SDL_PollEvent(&e)) {
-        // switch (e.type) {
-        //     case SDL_QUIT:
-        //         RequestQuit();
-        //         break;
-        //     case SDL_KEYDOWN:
-        //         break;
-        //     case SDL_KEYUP: {
-        //         g_pInputManager->AsciiKeyDown(static_cast<char>(e.key.keysym.sym));
-        //     } break;
-        //     case SDL_MOUSEBUTTONDOWN: {
-        //         if (e.button.button == SDL_BUTTON_LEFT) {
-        //             g_pInputManager->LeftMouseButtonDown();
-        //             m_bInDrag = true;
-        //         }
-        //     } break;
-        //     case SDL_MOUSEBUTTONUP: {
-        //         if (e.button.button == SDL_BUTTON_LEFT) {
-        //             g_pInputManager->LeftMouseButtonUp();
-        //             m_bInDrag = false;
-        //         }
-        //     } break;
-        //     case SDL_MOUSEMOTION: {
-        //         if (m_bInDrag) {
-        //             g_pInputManager->LeftMouseDrag(e.motion.xrel, e.motion.yrel);
-        //         }
-        //     } break;
-        //     case SDL_WINDOWEVENT:
-        //         if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-        //             int tmpX, tmpY;
-        //             SDL_GetWindowSize(m_pWindow, &tmpX, &tmpY);
-        //             onResize(tmpX, tmpY);
-        //         }
-        // }
+        switch (e.type) {
+            case SDL_QUIT:
+                RequestQuit();
+                break;
+                // case SDL_KEYDOWN:
+                //     break;
+                // case SDL_KEYUP: {
+                //     g_pInputManager->AsciiKeyDown(static_cast<char>(e.key.keysym.sym));
+                // } break;
+                // case SDL_MOUSEBUTTONDOWN: {
+                //     if (e.button.button == SDL_BUTTON_LEFT) {
+                //         g_pInputManager->LeftMouseButtonDown();
+                //         m_bInDrag = true;
+                //     }
+                // } break;
+                // case SDL_MOUSEBUTTONUP: {
+                //     if (e.button.button == SDL_BUTTON_LEFT) {
+                //         g_pInputManager->LeftMouseButtonUp();
+                //         m_bInDrag = false;
+                //     }
+                // } break;
+                // case SDL_MOUSEMOTION: {
+                //     if (m_bInDrag) {
+                //         g_pInputManager->LeftMouseDrag(e.motion.xrel, e.motion.yrel);
+                //     }
+                // } break;
+                // case SDL_WINDOWEVENT:
+                //     if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+                //         int tmpX, tmpY;
+                //         SDL_GetWindowSize(m_pWindow, &tmpX, &tmpY);
+                //         onResize(tmpX, tmpY);
+                //     }
+        }
     }
 
     SDL_GL_SwapWindow(m_pWindow);
 }
 
 void SdlApplication::CreateMainWindow() {
-    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, m_Config.redBits);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, m_Config.blueBits);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, m_Config.greenBits);

@@ -1,5 +1,6 @@
 #pragma once
 #include <unordered_map>
+#include <vector>
 
 namespace newbieGE {
 enum DefaultShaderIndex {
@@ -29,6 +30,8 @@ class GraphicsManager {
     bool m_bFinishInit = false;
     uint32_t m_CurrentShader;
     std::unordered_map<int32_t, uint32_t> m_ShaderList;
+    std::vector<uint32_t> m_Buffers;
+    std::vector<uint32_t> m_VAO;
 };
 
 extern GraphicsManager *g_pGraphicsManager;

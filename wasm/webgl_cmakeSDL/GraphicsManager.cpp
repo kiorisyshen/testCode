@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <vector>
 
 #include <GLES3/gl32.h>
 
@@ -112,7 +111,7 @@ static bool LoadShaderFromFile(const string filename, const GLenum shaderType, G
     if (filename == VS_BASIC_SOURCE_FILE) {
         shaderBuffer =
             "#version 300 es\n"
-            "in vec4 position;    \n"
+            "layout(location = 0) in vec3 position;    \n"
             "void main()                  \n"
             "{                            \n"
             "   gl_Position = vec4(position.xyz, 1.0);  \n"
@@ -212,7 +211,7 @@ int GraphicsManager::Initialize() {
     std::cout << "[Vendor] " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "[Renderer] " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "[GLSL] " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-    std::cout << "[Extensions] " << glGetString(GL_EXTENSIONS) << std::endl;
+    // std::cout << "[Extensions] " << glGetString(GL_EXTENSIONS) << std::endl;
 
     bool initShaderSucc = InitializeShaders();
     if (!initShaderSucc) result = -1;
@@ -240,10 +239,34 @@ void GraphicsManager::Tick() {
 void GraphicsManager::RenderBuffers() {
     if (!m_bFinishInit) return;
     // Draw
+    m_CurrentShader = m_ShaderList[(int32_t)DefaultShaderIndex::BasicShader];
+
+    glGetError();
+    glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glUseProgram(m_CurrentShader);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glFlush();
 }
 
 void GraphicsManager::BeginScene() {
     // Prepare buffers
+    uint32_t vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    uint32_t buffer_id;
+    glGenBuffers(1, &buffer_id);
+    GLfloat vertices[] = {0.0f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f};
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+
+    m_Buffers.push_back(buffer_id);
 }
 
 void GraphicsManager::EndScene() {
