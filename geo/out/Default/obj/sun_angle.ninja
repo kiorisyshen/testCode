@@ -1,0 +1,13 @@
+defines =
+include_dirs =
+cflags =
+cflags_cc = -std=c++11
+target_output_name = sun_angle
+
+build obj/sun_angle.test.o: cxx ../../test.cpp
+
+build sun_angle: link obj/sun_angle.test.o
+  ldflags =
+  libs =
+  output_extension = 
+  output_dir = 

@@ -1,0 +1,18 @@
+ninja_required_version = 1.7.2
+
+rule gn
+  command = ../../../../../../../usr/local/bin/gn --root=../.. -q gen .
+  description = Regenerating ninja files
+
+build build.ninja: gn
+  generator = 1
+  depfile = build.ninja.d
+
+subninja toolchain.ninja
+
+build $:sun_angle: phony sun_angle
+
+build all: phony $
+    sun_angle
+
+default all
