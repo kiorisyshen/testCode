@@ -28,8 +28,8 @@ function print_help {
     echo "    -m"
     echo "        Compile with make instead of ninja."
     echo "    -p platform1,platform2,..."
-    echo "        Where platformN is [ios|android|web|mac|all]."
-    echo "        Platform(s) to build, defaults to mac."
+    echo "        Where platformN is [ios|android|web|desktop|all]."
+    echo "        Platform(s) to build, defaults to desktop."
     echo "        Building for iOS will automatically generate / download"
     echo "        the toolchains if needed and perform a partial desktop build."
     echo "    -u"
@@ -50,10 +50,10 @@ function print_help {
     echo "        Debug build only"
     echo ""
     echo "Examples:"
-    echo "    Mac release build:"
+    echo "    Desktop release build:"
     echo "        \$ ./$self_name release"
     echo ""
-    echo "    Mac debug and release builds:"
+    echo "    Desktop debug and release builds:"
     echo "        \$ ./$self_name debug release"
     echo ""
     echo "    Build without test:"
@@ -68,7 +68,7 @@ function print_help {
     echo "    Multiple build type:"
     echo "        \$ ./$self_name -p ios,android release"
     echo ""
-    echo "    Run unit tests mac use debug and release build:"
+    echo "    Run unit tests desktop use debug and release build:"
     echo "        \$ ./$self_name -u release"
     echo ""
 }
@@ -82,10 +82,10 @@ function build_clean {
 function build_desktop_target {
     local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
 
-    echo "Building $lc_target in build/mac-${lc_target}..."
-    mkdir -p build/mac-${lc_target}
+    echo "Building $lc_target in build/desktop-${lc_target}..."
+    mkdir -p build/desktop-${lc_target}
 
-    cd build/mac-${lc_target}
+    cd build/desktop-${lc_target}
 
     if [[ ! -d "CMakeFiles" ]] || [[ "$ISSUE_CMAKE_ALWAYS" == "true" ]]; then
         if [[ "$BUILD_TESTS" == "true" ]]; then
@@ -93,21 +93,21 @@ function build_desktop_target {
                 -G "$BUILD_GENERATOR" \
                 -DCMAKE_BUILD_TYPE=$1 \
                 -DBUILD_TEST=ON \
-                -DCMAKE_INSTALL_PREFIX=../../Product/mac/${lc_target}/ \
+                -DCMAKE_INSTALL_PREFIX=../../Product/desktop/${lc_target}/ \
                 ../..
         else
             cmake \
                 -G "$BUILD_GENERATOR" \
                 -DCMAKE_BUILD_TYPE=$1 \
                 -DBUILD_TEST=OFF \
-                -DCMAKE_INSTALL_PREFIX=../../Product/mac/${lc_target}/ \
+                -DCMAKE_INSTALL_PREFIX=../../Product/desktop/${lc_target}/ \
                 ../..
         fi
     fi
     
     ${BUILD_COMMAND}
 
-    echo "Installing ${lc_target} in Product/mac/${lc_target}/filament..."
+    echo "Installing ${lc_target} in Product/desktop/${lc_target}/filament..."
     ${BUILD_COMMAND} install
 
     cd ../..
@@ -115,12 +115,12 @@ function build_desktop_target {
 
 function build_desktop {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
-        echo "Building mac desktop - Debug"
+        echo "Building desktop - Debug"
         build_desktop_target "Debug"
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
-        echo "Building mac desktop - Release"
+        echo "Building desktop - Release"
         build_desktop_target "Release"
     fi
 }
@@ -164,12 +164,12 @@ function build_web {
 function run_tests {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Runing tests - Debug"
-        ./build/mac-debug/test/testAll
+        ./build/desktop-debug/test/testAll
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
         echo "Runing tests - Release"
-        ./build/mac-release/test/testAll
+        ./build/desktop-release/test/testAll
     fi
 }
 
@@ -182,7 +182,7 @@ ISSUE_RELEASE_BUILD=false
 
 ISSUE_ANDROID_BUILD=flase
 ISSUE_IOS_BUILD=flase
-ISSUE_MAC_BUILD=true
+ISSUE_DESKTOP_BUILD=true
 ISSUE_WEB_BUILD=flase
 
 IOS_BUILD_SIMULATOR=false
@@ -209,7 +209,7 @@ while getopts ":hcjmp:utvsw" opt; do
             BUILD_COMMAND="make"
             ;;
         p)
-            ISSUE_MAC_BUILD=false
+            ISSUE_DESKTOP_BUILD=false
             platforms=$(echo "$OPTARG" | tr ',' '\n')
             for platform in ${platforms}
             do
@@ -223,13 +223,13 @@ while getopts ":hcjmp:utvsw" opt; do
                     web)
                         ISSUE_WEB_BUILD=true
                     ;;
-                    mac)
-                        ISSUE_MAC_BUILD=true
+                    desktop)
+                        ISSUE_DESKTOP_BUILD=true
                     ;;
                     all)
                         ISSUE_ANDROID_BUILD=true
                         ISSUE_IOS_BUILD=true
-                        ISSUE_MAC_BUILD=true
+                        ISSUE_DESKTOP_BUILD=true
                         ISSUE_WEB_BUILD=false
                     ;;
                 esac
@@ -295,20 +295,24 @@ mkdir -p Product
 if [[ "$ISSUE_CLEAN" == "true" ]]; then
     build_clean
 else
-    if [[ "$ISSUE_MAC_BUILD" == "true" ]]; then
+    if [[ "$ISSUE_DESKTOP_BUILD" == "true" ]]; then
         build_desktop
+        echo ""
     fi
 
     if [[ "$ISSUE_ANDROID_BUILD" == "true" ]]; then
         build_android
+        echo ""
     fi
 
     if [[ "$ISSUE_IOS_BUILD" == "true" ]]; then
         build_ios
+        echo ""
     fi
 
     if [[ "$ISSUE_WEB_BUILD" == "true" ]]; then
         build_web
+        echo ""
     fi
 
     if [[ "$RUN_TESTS" == "true" ]]; then
