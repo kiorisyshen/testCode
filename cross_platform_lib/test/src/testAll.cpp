@@ -1,6 +1,6 @@
 #include "public/include/pubCppLib.hpp"
 
-int main() {
+int run_tests() {
     trigerLib(3);
     return 0;
 }
