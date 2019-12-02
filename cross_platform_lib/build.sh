@@ -72,8 +72,8 @@ function print_help {
 
 function build_clean {
     echo "Cleaning build and Product directories..."
-    rm -Rvf build
-    rm -Rvf Product
+    rm -Rf build
+    rm -Rf Product
 }
 
 function build_desktop_target {
@@ -170,17 +170,17 @@ function build_ios {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building ios - Debug"
         build_ios_target "Debug" "arm64" "iphoneos"
-        if [[ "$IOS_BUILD_SIMULATOR" == "true" ]]; then
-            build_ios_target "Debug" "x86_64" "iphonesimulator"
-        fi
+        # if [[ "$IOS_BUILD_SIMULATOR" == "true" ]]; then
+        #     build_ios_target "Debug" "x86_64" "iphonesimulator"
+        # fi
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
         echo "Building ios - Release"
         build_ios_target "Release" "arm64" "iphoneos"
-        if [[ "$IOS_BUILD_SIMULATOR" == "true" ]]; then
-            build_ios_target "Release" "x86_64" "iphonesimulator"
-        fi
+        # if [[ "$IOS_BUILD_SIMULATOR" == "true" ]]; then
+        #     build_ios_target "Release" "x86_64" "iphonesimulator"
+        # fi
     fi
 }
 
