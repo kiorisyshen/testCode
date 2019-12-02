@@ -67,8 +67,8 @@ function print_help {
 
 function build_clean {
     echo "Cleaning build and Product directories..."
-    rm -Rf build
-    rm -Rf Product
+    rm -Rvf build
+    rm -Rvf Product
 }
 
 function build_desktop_target {
@@ -151,12 +151,12 @@ function run_tests {
 # Script start
 ISSUE_CLEAN=false
 
-ISSUE_DEBUG_BUILD=true
+ISSUE_DEBUG_BUILD=false
 ISSUE_RELEASE_BUILD=false
 
 ISSUE_ANDROID_BUILD=flase
 ISSUE_IOS_BUILD=flase
-ISSUE_MAC_BUILD=true
+ISSUE_MAC_BUILD=false
 ISSUE_WEB_BUILD=flase
 
 IOS_BUILD_SIMULATOR=false
@@ -254,8 +254,10 @@ shift $(($OPTIND - 1))
 for arg; do
     if [[ "$arg" == "release" ]]; then
         ISSUE_RELEASE_BUILD=true
+        ISSUE_MAC_BUILD=true
     elif [[ "$arg" == "debug" ]]; then
         ISSUE_DEBUG_BUILD=true
+        ISSUE_MAC_BUILD=true
     fi
 done
 

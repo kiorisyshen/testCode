@@ -6,6 +6,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/configure")
 
+include_directories("${PROJECT_SOURCE_DIR}/src")
+
 add_subdirectory(src)
 
 # if(SELF_TARGET_PLATFORM STREQUAL "Darwin")
