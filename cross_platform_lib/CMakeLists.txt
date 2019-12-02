@@ -208,6 +208,7 @@ MESSAGE( STATUS "CMAKE_CROSSCOMPILING: " ${CMAKE_CROSSCOMPILING} )
 message( STATUS "===========================" )
 message( STATUS " Output self-defined cmake variables" )
 message( STATUS "===========================" )
+message( STATUS "Target platform: ${TARGET_PLATFORM}" )
 message( STATUS "Build Tests: ${BUILD_TEST}" )
 
 message( STATUS "===========================" )

@@ -91,6 +91,7 @@ function build_desktop_target {
                 -DCMAKE_BUILD_TYPE=$1 \
                 -DBUILD_TEST=ON \
                 -DCMAKE_INSTALL_PREFIX=../../Product/desktop/${lc_target}/ \
+                -DTARGET_PLATFORM=desktop \
                 ../..
         else
             cmake \
@@ -98,6 +99,7 @@ function build_desktop_target {
                 -DCMAKE_BUILD_TYPE=$1 \
                 -DBUILD_TEST=OFF \
                 -DCMAKE_INSTALL_PREFIX=../../Product/desktop/${lc_target}/ \
+                -DTARGET_PLATFORM=desktop \
                 ../..
         fi
     fi
@@ -128,6 +130,7 @@ function build_ios_target {
                 -DBUILD_TEST=ON \
                 -DCMAKE_INSTALL_PREFIX=../../Product/ios/${lc_target}/ \
                 -DCMAKE_TOOLCHAIN_FILE=../../cmake/toolchain-mac-ios.cmake \
+                -DTARGET_PLATFORM=ios \
                 ../..
         else
             cmake \
@@ -136,6 +139,7 @@ function build_ios_target {
                 -DBUILD_TEST=OFF \
                 -DCMAKE_INSTALL_PREFIX=../../Product/ios/${lc_target}/ \
                 -DCMAKE_TOOLCHAIN_FILE=../../cmake/toolchain-mac-ios.cmake \
+                -DTARGET_PLATFORM=ios \
                 ../..
         fi
     fi
@@ -207,12 +211,12 @@ function build_web {
 function run_tests {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Runing tests - Debug"
-        ./build/desktop-debug/test/testAll
+        ./build/desktop-debug/test/desktop/testMain
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
         echo "Runing tests - Release"
-        ./build/desktop-release/test/testAll
+        ./build/desktop-release/test/desktop/testMain
     fi
 }
 
