@@ -23,8 +23,6 @@ function print_help {
     echo "        Print this help message."
     echo "    -c"
     echo "        Clean build and Product directories."
-    echo "    -j"
-    echo "        Do not compile desktop Java projects"
     echo "    -m"
     echo "        Compile with make instead of ninja."
     echo "    -p platform1,platform2,..."
@@ -36,12 +34,8 @@ function print_help {
     echo "        Run all unit tests, default is debug build."
     echo "    -t"
     echo "        Build without test."
-    echo "    -v"
-    echo "        Add Vulkan support to the Android build."
     echo "    -s"
     echo "        Add iOS simulator support to the iOS build."
-    echo "    -w"
-    echo "        Build Web documents (compiles .md.html files to .html)."
     echo ""
     echo "Build types:"
     echo "    release"
@@ -192,7 +186,7 @@ RUN_TESTS=false
 BUILD_GENERATOR=Ninja
 BUILD_COMMAND=ninja
 
-while getopts ":hcjmp:utvsw" opt; do
+while getopts ":hcmp:uts" opt; do
     case ${opt} in
         h)
             print_help
@@ -200,9 +194,6 @@ while getopts ":hcjmp:utvsw" opt; do
             ;;
         c)
             ISSUE_CLEAN=true
-            ;;
-        j)
-            ENABLE_JAVA=OFF
             ;;
         m)
             BUILD_GENERATOR="Unix Makefiles"
@@ -242,22 +233,9 @@ while getopts ":hcjmp:utvsw" opt; do
             ISSUE_DEBUG_BUILD=true
             RUN_TESTS=true
             ;;
-        v)
-            VULKAN_ANDROID_OPTION="-DFILAMENT_SUPPORTS_VULKAN=ON"
-            echo "Enabling support for Vulkan in the core Filament library."
-            echo ""
-            echo "To switch your application to Vulkan, in Android Studio go to "
-            echo "File > Settings > Build > Compiler. In the command-line options field, "
-            echo "add -Pextra_cmake_args=-DFILAMENT_SUPPORTS_VULKAN=ON."
-            echo "Also be sure to pass Engine.Backend.VULKAN to Engine.create."
-            echo ""
-            ;;
         s)
             IOS_BUILD_SIMULATOR=true
             echo "iOS simulator support enabled."
-            ;;
-        w)
-            ISSUE_WEB_DOCS=true
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
