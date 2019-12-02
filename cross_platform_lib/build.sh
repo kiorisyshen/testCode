@@ -31,11 +31,13 @@ function print_help {
     echo "        Building for iOS will automatically generate / download"
     echo "        the toolchains if needed and perform a partial desktop build."
     echo "    -u"
-    echo "        Run all unit tests, default is debug build."
+    echo "        Run all unit tests in desktop platform, default is debug build."
     echo "    -t"
     echo "        Build without test."
     echo "    -s"
     echo "        Add iOS simulator support to the iOS build."
+    echo "    -x"
+    echo "        Generate Xcode project."
     echo ""
     echo "Build types:"
     echo "    release"
@@ -99,10 +101,12 @@ function build_desktop_target {
         fi
     fi
     
-    ${BUILD_COMMAND}
+    if [[ "$BUILD_COMMAND" != "None" ]]; then
+        ${BUILD_COMMAND}
 
-    echo "Installing ${lc_target} in Product/desktop/${lc_target}/filament..."
-    ${BUILD_COMMAND} install
+        echo "Installing ${lc_target} in Product/desktop/${lc_target}..."
+        ${BUILD_COMMAND} install
+    fi
 
     cd ../..
 }
@@ -186,7 +190,7 @@ RUN_TESTS=false
 BUILD_GENERATOR=Ninja
 BUILD_COMMAND=ninja
 
-while getopts ":hcmp:uts" opt; do
+while getopts ":hcmp:utsx" opt; do
     case ${opt} in
         h)
             print_help
@@ -236,6 +240,10 @@ while getopts ":hcmp:uts" opt; do
         s)
             IOS_BUILD_SIMULATOR=true
             echo "iOS simulator support enabled."
+            ;;
+        x)
+            BUILD_GENERATOR=Xcode
+            BUILD_COMMAND="None"
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
