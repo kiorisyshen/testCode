@@ -1,6 +1,3 @@
-add_subdirectory(src)
-
-include_directories(src)
 
 if(${TARGET_PLATFORM} MATCHES "desktop")
     add_subdirectory(desktop)

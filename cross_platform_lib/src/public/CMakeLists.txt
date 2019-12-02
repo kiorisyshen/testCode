@@ -1,5 +1,5 @@
-add_library(pubCppLib pubCppLib.cpp)
-target_link_libraries(pubCppLib cppLib)
-
-install(TARGETS pubCppLib)
-install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
+if(${TARGET_PLATFORM} MATCHES "desktop")
+    add_subdirectory(desktop)
+elseif(${TARGET_PLATFORM} MATCHES "ios")
+    add_subdirectory(ios)
+endif()

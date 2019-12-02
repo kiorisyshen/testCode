@@ -8,11 +8,14 @@ option(BUILD_TEST "BUILD_TEST" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/configure")
 
+configure_file(${PROJECT_SOURCE_DIR}/config.hpp.in ${PROJECT_SOURCE_DIR}/config.hpp)
+
+include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
 add_subdirectory(src)
 if(BUILD_TEST)
-    add_subdirectory(test)
+    add_subdirectory(platformTest)
 endif(BUILD_TEST)
 
 

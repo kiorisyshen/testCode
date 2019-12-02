@@ -32,7 +32,7 @@ function print_help {
     echo "        Building for iOS will automatically generate / download"
     echo "        the toolchains if needed and perform a partial desktop build."
     echo "    -u"
-    echo "        Run all unit tests in desktop platform, default is debug build."
+    echo "        Run all unit tests in desktop platform."
     echo "    -t"
     echo "        Build without test."
     echo "    -s"
@@ -211,12 +211,12 @@ function build_web {
 function run_tests {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Runing tests - Debug"
-        ./build/desktop-debug/test/desktop/testMain
+        ./build/desktop-debug/platformTest/desktop/unitTestMain
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
         echo "Runing tests - Release"
-        ./build/desktop-release/test/desktop/testMain
+        ./build/desktop-release/platformTest/desktop/unitTestMain
     fi
 }
 
@@ -283,7 +283,6 @@ while getopts ":hcmp:utsx" opt; do
             BUILD_TESTS=false
             ;;
         u)
-            ISSUE_DEBUG_BUILD=true
             RUN_TESTS=true
             ;;
         s)
