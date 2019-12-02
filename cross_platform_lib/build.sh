@@ -33,7 +33,7 @@ function print_help {
     echo "        Building for iOS will automatically generate / download"
     echo "        the toolchains if needed and perform a partial desktop build."
     echo "    -u"
-    echo "        Run all unit tests, will trigger a debug build if needed."
+    echo "        Run all unit tests, default is debug build."
     echo "    -t"
     echo "        Build without test."
     echo "    -v"
@@ -68,6 +68,9 @@ function print_help {
     echo "    Multiple build type:"
     echo "        \$ ./$self_name -p ios,android release"
     echo ""
+    echo "    Run unit tests mac use debug and release build:"
+    echo "        \$ ./$self_name -u release"
+    echo ""
 }
 
 function build_clean {
@@ -79,10 +82,10 @@ function build_clean {
 function build_desktop_target {
     local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
 
-    echo "Building $lc_target in build/${lc_target}..."
-    mkdir -p build/${lc_target}
+    echo "Building $lc_target in build/mac-${lc_target}..."
+    mkdir -p build/mac-${lc_target}
 
-    cd build/${lc_target}
+    cd build/mac-${lc_target}
 
     if [[ ! -d "CMakeFiles" ]] || [[ "$ISSUE_CMAKE_ALWAYS" == "true" ]]; then
         if [[ "$BUILD_TESTS" == "true" ]]; then
@@ -159,7 +162,15 @@ function build_web {
 }
 
 function run_tests {
-    echo "Runing tests - Debug"
+    if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
+        echo "Runing tests - Debug"
+        ./build/mac-debug/test/testAll
+    fi
+
+    if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
+        echo "Runing tests - Release"
+        ./build/mac-release/test/testAll
+    fi
 }
 
 #######################################################
@@ -171,7 +182,7 @@ ISSUE_RELEASE_BUILD=false
 
 ISSUE_ANDROID_BUILD=flase
 ISSUE_IOS_BUILD=flase
-ISSUE_MAC_BUILD=false
+ISSUE_MAC_BUILD=true
 ISSUE_WEB_BUILD=flase
 
 IOS_BUILD_SIMULATOR=false
@@ -273,10 +284,8 @@ shift $(($OPTIND - 1))
 for arg; do
     if [[ "$arg" == "release" ]]; then
         ISSUE_RELEASE_BUILD=true
-        ISSUE_MAC_BUILD=true
     elif [[ "$arg" == "debug" ]]; then
         ISSUE_DEBUG_BUILD=true
-        ISSUE_MAC_BUILD=true
     fi
 done
 
@@ -285,24 +294,25 @@ mkdir -p Product
 
 if [[ "$ISSUE_CLEAN" == "true" ]]; then
     build_clean
+else
+    if [[ "$ISSUE_MAC_BUILD" == "true" ]]; then
+        build_desktop
+    fi
+
+    if [[ "$ISSUE_ANDROID_BUILD" == "true" ]]; then
+        build_android
+    fi
+
+    if [[ "$ISSUE_IOS_BUILD" == "true" ]]; then
+        build_ios
+    fi
+
+    if [[ "$ISSUE_WEB_BUILD" == "true" ]]; then
+        build_web
+    fi
+
+    if [[ "$RUN_TESTS" == "true" ]]; then
+        run_tests
+    fi
 fi
 
-if [[ "$ISSUE_MAC_BUILD" == "true" ]]; then
-    build_desktop
-fi
-
-if [[ "$ISSUE_ANDROID_BUILD" == "true" ]]; then
-    build_android
-fi
-
-if [[ "$ISSUE_IOS_BUILD" == "true" ]]; then
-    build_ios
-fi
-
-if [[ "$ISSUE_WEB_BUILD" == "true" ]]; then
-    build_web
-fi
-
-if [[ "$RUN_TESTS" == "true" ]]; then
-    run_tests
-fi
