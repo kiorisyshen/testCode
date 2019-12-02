@@ -4,15 +4,24 @@ project(cross_lib)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+option(BUILD_TEST "BUILD_TEST" OFF)
+
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/configure")
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
 add_subdirectory(src)
+if(BUILD_TEST)
+    add_subdirectory(test)
+endif(BUILD_TEST)
+
 
 # if(SELF_TARGET_PLATFORM STREQUAL "Darwin")
 # endif()
 
+message( STATUS "===========================" )
+message( STATUS " Output defaule cmake variables" )
+message( STATUS "===========================" )
 # current generator in use 
 MESSAGE( STATUS "CMAKE_GENERATOR:         " ${CMAKE_GENERATOR} )
 
@@ -195,3 +204,10 @@ MESSAGE( STATUS "CMAKE_CROSSCOMPILING: " ${CMAKE_CROSSCOMPILING} )
 # MESSAGE( STATUS "BULLET_COLLISION_LIBRARY: " ${BULLET_COLLISION_LIBRARY} )
 # MESSAGE( STATUS "BULLET_DYNAMICS_LIBRARY: " ${BULLET_DYNAMICS_LIBRARY} )
 # MESSAGE( STATUS "BULLET_LINEARMATH_LIBRARY: " ${BULLET_LINEARMATH_LIBRARY} )
+
+message( STATUS "===========================" )
+message( STATUS " Output self-defined cmake variables" )
+message( STATUS "===========================" )
+message( STATUS "Build Tests: ${BUILD_TEST}" )
+
+message( STATUS "===========================" )

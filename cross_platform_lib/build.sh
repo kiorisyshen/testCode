@@ -34,6 +34,8 @@ function print_help {
     echo "        the toolchains if needed and perform a partial desktop build."
     echo "    -u"
     echo "        Run all unit tests, will trigger a debug build if needed."
+    echo "    -t"
+    echo "        Build without test."
     echo "    -v"
     echo "        Add Vulkan support to the Android build."
     echo "    -s"
@@ -53,6 +55,9 @@ function print_help {
     echo ""
     echo "    Mac debug and release builds:"
     echo "        \$ ./$self_name debug release"
+    echo ""
+    echo "    Build without test:"
+    echo "        \$ ./$self_name -t debug"
     echo ""
     echo "    Clean build directories:"
     echo "        \$ ./$self_name -c"
@@ -80,11 +85,21 @@ function build_desktop_target {
     cd build/${lc_target}
 
     if [[ ! -d "CMakeFiles" ]] || [[ "$ISSUE_CMAKE_ALWAYS" == "true" ]]; then
-        cmake \
-            -G "$BUILD_GENERATOR" \
-            -DCMAKE_BUILD_TYPE=$1 \
-            -DCMAKE_INSTALL_PREFIX=../../Product/mac/${lc_target}/ \
-            ../..
+        if [[ "$BUILD_TESTS" == "true" ]]; then
+            cmake \
+                -G "$BUILD_GENERATOR" \
+                -DCMAKE_BUILD_TYPE=$1 \
+                -DBUILD_TEST=ON \
+                -DCMAKE_INSTALL_PREFIX=../../Product/mac/${lc_target}/ \
+                ../..
+        else
+            cmake \
+                -G "$BUILD_GENERATOR" \
+                -DCMAKE_BUILD_TYPE=$1 \
+                -DBUILD_TEST=OFF \
+                -DCMAKE_INSTALL_PREFIX=../../Product/mac/${lc_target}/ \
+                ../..
+        fi
     fi
     
     ${BUILD_COMMAND}
@@ -160,12 +175,13 @@ ISSUE_MAC_BUILD=false
 ISSUE_WEB_BUILD=flase
 
 IOS_BUILD_SIMULATOR=false
+BUILD_TESTS=true
 RUN_TESTS=false
 
 BUILD_GENERATOR=Ninja
 BUILD_COMMAND=ninja
 
-while getopts ":hcjmp:uvsw" opt; do
+while getopts ":hcjmp:utvsw" opt; do
     case ${opt} in
         h)
             print_help
@@ -207,6 +223,9 @@ while getopts ":hcjmp:uvsw" opt; do
                     ;;
                 esac
             done
+            ;;
+        t)
+            BUILD_TESTS=false
             ;;
         u)
             ISSUE_DEBUG_BUILD=true
