@@ -22,14 +22,14 @@ function print_help {
     echo "    -h"
     echo "        Print this help message."
     echo "    -c"
-    echo "        Clean build directories."
+    echo "        Clean build and Product directories."
     echo "    -j"
     echo "        Do not compile desktop Java projects"
     echo "    -m"
     echo "        Compile with make instead of ninja."
     echo "    -p platform1,platform2,..."
     echo "        Where platformN is [ios|android|web|mac|all]."
-    echo "        Platform(s) to build, defaults to desktop."
+    echo "        Platform(s) to build, defaults to mac."
     echo "        Building for iOS will automatically generate / download"
     echo "        the toolchains if needed and perform a partial desktop build."
     echo "    -u"
@@ -66,19 +66,44 @@ function print_help {
 }
 
 function build_clean {
-    echo "Cleaning build directories..."
+    echo "Cleaning build and Product directories..."
     rm -Rf build
+    rm -Rf Product
+}
+
+function build_desktop_target {
+    local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
+
+    echo "Building $lc_target in build/${lc_target}..."
+    mkdir -p build/${lc_target}
+
+    cd build/${lc_target}
+
+    if [[ ! -d "CMakeFiles" ]] || [[ "$ISSUE_CMAKE_ALWAYS" == "true" ]]; then
+        cmake \
+            -G "$BUILD_GENERATOR" \
+            -DCMAKE_BUILD_TYPE=$1 \
+            -DCMAKE_INSTALL_PREFIX=../../Product/mac/${lc_target}/ \
+            ../..
+    fi
+    
+    ${BUILD_COMMAND}
+
+    echo "Installing ${lc_target} in Product/mac/${lc_target}/filament..."
+    ${BUILD_COMMAND} install
+
+    cd ../..
 }
 
 function build_desktop {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
-        echo "Building mac - Debug"
-        # build_desktop_target "Debug" "$1"
+        echo "Building mac desktop - Debug"
+        build_desktop_target "Debug"
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
-        echo "Building mac - Release"
-        # build_desktop_target "Release" "$1"
+        echo "Building mac desktop - Release"
+        build_desktop_target "Release"
     fi
 }
 
@@ -124,10 +149,21 @@ function run_tests {
 
 #######################################################
 # Script start
+ISSUE_CLEAN=false
+
+ISSUE_DEBUG_BUILD=true
+ISSUE_RELEASE_BUILD=false
+
 ISSUE_ANDROID_BUILD=flase
 ISSUE_IOS_BUILD=flase
 ISSUE_MAC_BUILD=true
 ISSUE_WEB_BUILD=flase
+
+IOS_BUILD_SIMULATOR=false
+RUN_TESTS=false
+
+BUILD_GENERATOR=Ninja
+BUILD_COMMAND=ninja
 
 while getopts ":hcjmp:uvsw" opt; do
     case ${opt} in
@@ -217,13 +253,14 @@ shift $(($OPTIND - 1))
 
 for arg; do
     if [[ "$arg" == "release" ]]; then
-        mkdir -p build
         ISSUE_RELEASE_BUILD=true
     elif [[ "$arg" == "debug" ]]; then
-        mkdir -p build
         ISSUE_DEBUG_BUILD=true
     fi
 done
+
+mkdir -p build
+mkdir -p Product
 
 if [[ "$ISSUE_CLEAN" == "true" ]]; then
     build_clean

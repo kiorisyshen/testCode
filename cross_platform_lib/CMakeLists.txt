@@ -4,7 +4,9 @@ project(cross_lib)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/configure")
+
+add_subdirectory(src)
 
 # if(SELF_TARGET_PLATFORM STREQUAL "Darwin")
 # endif()
