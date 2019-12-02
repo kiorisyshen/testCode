@@ -16,7 +16,8 @@ function print_help {
     echo "    $self_name [options] <build_type1> [<build_type2> ...]"
     echo ""
     echo "Notice:"
-    echo "    Currently only support Mac as host build machine"
+    echo "    1. Currently only support Mac as host build machine"
+    echo "    2. The default build tools is Ninja, use -m to switch to make"
     echo ""
     echo "Options:"
     echo "    -h"
@@ -83,7 +84,7 @@ function build_desktop_target {
 
     cd build/desktop-${lc_target}
 
-    if [[ ! -d "CMakeFiles" ]] || [[ "$ISSUE_CMAKE_ALWAYS" == "true" ]]; then
+    if [[ ! -d "CMakeFiles" ]]; then
         if [[ "$BUILD_TESTS" == "true" ]]; then
             cmake \
                 -G "$BUILD_GENERATOR" \
@@ -111,6 +112,44 @@ function build_desktop_target {
     cd ../..
 }
 
+function build_ios_target {
+    local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
+
+    echo "Building $lc_target in build/ios-${lc_target}..."
+    mkdir -p build/ios-${lc_target}
+
+    cd build/ios-${lc_target}
+
+    if [[ ! -d "CMakeFiles" ]]; then
+        if [[ "$BUILD_TESTS" == "true" ]]; then
+            cmake \
+                -G "$BUILD_GENERATOR" \
+                -DCMAKE_BUILD_TYPE=$1 \
+                -DBUILD_TEST=ON \
+                -DCMAKE_INSTALL_PREFIX=../../Product/ios/${lc_target}/ \
+                -DCMAKE_TOOLCHAIN_FILE=../../cmake/toolchain-mac-ios.cmake \
+                ../..
+        else
+            cmake \
+                -G "$BUILD_GENERATOR" \
+                -DCMAKE_BUILD_TYPE=$1 \
+                -DBUILD_TEST=OFF \
+                -DCMAKE_INSTALL_PREFIX=../../Product/ios/${lc_target}/ \
+                -DCMAKE_TOOLCHAIN_FILE=../../cmake/toolchain-mac-ios.cmake \
+                ../..
+        fi
+    fi
+    
+    if [[ "$BUILD_COMMAND" != "None" ]]; then
+        ${BUILD_COMMAND}
+
+        echo "Installing ${lc_target} in Product/ios/${lc_target}..."
+        ${BUILD_COMMAND} install
+    fi
+
+    cd ../..
+}
+
 function build_desktop {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building desktop - Debug"
@@ -126,12 +165,18 @@ function build_desktop {
 function build_ios {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building ios - Debug"
-        # build_desktop_target "Debug" "$1"
+        build_ios_target "Debug" "arm64" "iphoneos"
+        if [[ "$IOS_BUILD_SIMULATOR" == "true" ]]; then
+            build_ios_target "Debug" "x86_64" "iphonesimulator"
+        fi
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
         echo "Building ios - Release"
-        # build_desktop_target "Release" "$1"
+        build_ios_target "Release" "arm64" "iphoneos"
+        if [[ "$IOS_BUILD_SIMULATOR" == "true" ]]; then
+            build_ios_target "Release" "x86_64" "iphonesimulator"
+        fi
     fi
 }
 
