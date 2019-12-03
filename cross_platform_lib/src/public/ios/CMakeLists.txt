@@ -9,6 +9,7 @@ find_library(APPLE_CoreGraphics NAMES CoreGraphics)
 
 set(TARGET_HEADERS 
     include/CppLibManager.h
+    ${PROJECT_SOURCE_DIR}/config.hpp
 )
 set(TARGET_SOURCES 
     CppLibManager.mm
