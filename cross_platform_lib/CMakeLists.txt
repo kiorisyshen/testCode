@@ -216,6 +216,7 @@ message( STATUS "Build Tests: ${BUILD_TEST}" )
 
 if(${TARGET_PLATFORM} MATCHES "ios")
     message( STATUS "IOS sysroot: ${CMAKE_OSX_SYSROOT}" )
+    message( STATUS "IOS target version: ${CMAKE_OSX_DEPLOYMENT_TARGET}")
 endif()
 
 

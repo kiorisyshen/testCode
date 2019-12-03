@@ -151,7 +151,7 @@ function build_ios_target {
 
         echo "Installing ${lc_target} in Product/ios/${lc_target}..."
         
-        cp -r src/public/ios/$1-iphoneos/*.framework $product_dir
+        cp -R $1-iphoneos/*.framework $product_dir
         set +x
     fi
 
