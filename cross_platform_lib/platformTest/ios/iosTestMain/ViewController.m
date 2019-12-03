@@ -21,7 +21,8 @@
     // Do any additional setup after loading the view.
     
     
-    
+    CppLibManager* testManager = [[CppLibManager alloc] init];
+    [testManager trigerLib:-1];
 }
 
 
