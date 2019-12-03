@@ -83,23 +83,18 @@ function build_desktop_target {
     cd build/desktop-${lc_target}
 
     if [[ ! -d "CMakeFiles" ]]; then
+        local flag_build_tests=OFF
         if [[ "$BUILD_TESTS" == "true" ]]; then
-            cmake \
-                -G "$BUILD_GENERATOR" \
-                -DCMAKE_BUILD_TYPE=$1 \
-                -DBUILD_TEST=ON \
-                -DCMAKE_INSTALL_PREFIX=../../Product/desktop/${lc_target}/ \
-                -DTARGET_PLATFORM=desktop \
-                ../..
-        else
-            cmake \
-                -G "$BUILD_GENERATOR" \
-                -DCMAKE_BUILD_TYPE=$1 \
-                -DBUILD_TEST=OFF \
-                -DCMAKE_INSTALL_PREFIX=../../Product/desktop/${lc_target}/ \
-                -DTARGET_PLATFORM=desktop \
-                ../..
+            flag_build_tests=ON
         fi
+
+        cmake \
+            -G "$BUILD_GENERATOR" \
+            -DCMAKE_BUILD_TYPE=$1 \
+            -DBUILD_TEST=ON \
+            -DCMAKE_INSTALL_PREFIX=../../Product/desktop/${lc_target}/ \
+            -DTARGET_PLATFORM=desktop \
+            ../..
     fi
     
     if [[ "$BUILD_COMMAND" != "None" ]]; then
@@ -124,37 +119,26 @@ function build_ios_target {
     mkdir -p $product_dir
 
     if [[ ! -d "CMakeFiles" ]]; then
+        local flag_build_tests=OFF
         if [[ "$BUILD_TESTS" == "true" ]]; then
-            cmake \
-                -G "$BUILD_GENERATOR" \
-                -DCMAKE_BUILD_TYPE=$1 \
-                -DBUILD_TEST=ON \
-                -DCMAKE_INSTALL_PREFIX=$product_dir \
-                -DCMAKE_SYSTEM_NAME=iOS \
-                -DTARGET_PLATFORM=ios \
-                ../..
-        else
-            cmake \
-                -G "$BUILD_GENERATOR" \
-                -DCMAKE_BUILD_TYPE=$1 \
-                -DBUILD_TEST=OFF \
-                -DCMAKE_INSTALL_PREFIX=$product_dir \
-                -DCMAKE_SYSTEM_NAME=iOS \
-                -DTARGET_PLATFORM=ios \
-                ../..
+            flag_build_tests=ON
         fi
+
+        cmake \
+            -G "$BUILD_GENERATOR" \
+            -DCMAKE_BUILD_TYPE=$1 \
+            -DBUILD_TEST=flag_build_tests \
+            -DCMAKE_INSTALL_PREFIX=$product_dir \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DTARGET_PLATFORM=ios \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=9.3 \
+            -DCMAKE_IOS_INSTALL_COMBINED=YES \
+            "-DCMAKE_OSX_ARCHITECTURES=armv7;armv7s;arm64;x86_64" \
+            ../..
     fi
     
     if [[ "$BUILD_COMMAND" != "None" ]]; then
-        set -x
-        ${BUILD_COMMAND} -project *.xcodeproj -configuration $1 -sdk "iphoneos" -scheme "ALL_BUILD" build
-        set +x
-
-        echo "Installing ${lc_target} in Product/ios/${lc_target}..."
-        
-        set -x
-        cp -R $1-iphoneos/*.framework $product_dir
-        set +x
+        cmake --build . --config $1 --target install
     fi
 
     cd ../..
@@ -175,18 +159,12 @@ function build_desktop {
 function build_ios {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building ios - Debug"
-        build_ios_target "Debug" "arm64" "iphoneos"
-        # if [[ "$IOS_BUILD_SIMULATOR" == "true" ]]; then
-        #     build_ios_target "Debug" "x86_64" "iphonesimulator"
-        # fi
+        build_ios_target "Debug"
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
         echo "Building ios - Release"
-        build_ios_target "Release" "arm64" "iphoneos"
-        # if [[ "$IOS_BUILD_SIMULATOR" == "true" ]]; then
-        #     build_ios_target "Release" "x86_64" "iphonesimulator"
-        # fi
+        build_ios_target "Release"
     fi
 }
 

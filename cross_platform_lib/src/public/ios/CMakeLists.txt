@@ -2,7 +2,6 @@ set(MACOSX_FRAMEWORK_IDENTIFIER "com.dji.gspro.3dengine")
 set(MACOSX_FRAMEWORK_NAME "pubCppLib")    
 set(MACOSX_FRAMEWORK_BUNDLE_VERSION "1.0.0")    
 set(MACOSX_FRAMEWORK_SHORT_VERSION_STRING "1.0.0")
-set(CMAKE_OSX_DEPLOYMENT_TARGET "9.3" CACHE STRING "Minimum deployment version")
 
 find_library(APPLE_UIKit NAMES UIKit)
 find_library(APPLE_CoreGraphics NAMES CoreGraphics)
@@ -20,6 +19,8 @@ add_library(
     ${TARGET_HEADERS}
     ${TARGET_SOURCES}
 )
+
+install(TARGETS ${MACOSX_FRAMEWORK_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 target_link_libraries(
     ${MACOSX_FRAMEWORK_NAME}
@@ -47,7 +48,7 @@ set_target_properties(${MACOSX_FRAMEWORK_NAME} PROPERTIES
     ## ----------------------------------
     ## Build Location (!!Must see IMPORTANT above)
     ## ----------------------------------
-    XCODE_ATTRIBUTE_SYMROOT "${CMAKE_BINARY_DIR}"
+    # XCODE_ATTRIBUTE_SYMROOT "${CMAKE_BINARY_DIR}"
     ## ----------------------------------
     ## Build Option
     ## ----------------------------------
