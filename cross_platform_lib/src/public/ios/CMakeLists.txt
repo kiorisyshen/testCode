@@ -28,7 +28,7 @@ target_link_libraries(
 )
 
 if(BUILD_TEST)
-    target_link_libraries(${MACOSX_FRAMEWORK_NAME} unitTest)
+    target_link_libraries(${MACOSX_FRAMEWORK_NAME} PUBLIC unitTest)
 endif(BUILD_TEST)
 
 set_target_properties(${MACOSX_FRAMEWORK_NAME} PROPERTIES

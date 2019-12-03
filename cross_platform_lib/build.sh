@@ -115,10 +115,10 @@ function build_desktop_target {
 function build_ios_target {
     local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
 
-    echo "Building $lc_target in build/ios-${lc_target}..."
-    mkdir -p build/ios-${lc_target}
+    echo "Building $lc_target in build/ios..."
+    mkdir -p build/ios
 
-    cd build/ios-${lc_target}
+    cd build/ios
 
     local product_dir=../../Product/ios/${lc_target}/
     mkdir -p $product_dir
@@ -148,9 +148,11 @@ function build_ios_target {
     if [[ "$BUILD_COMMAND" != "None" ]]; then
         set -x
         ${BUILD_COMMAND} -project *.xcodeproj -configuration $1 -sdk "iphoneos" -scheme "ALL_BUILD" build
+        set +x
 
         echo "Installing ${lc_target} in Product/ios/${lc_target}..."
         
+        set -x
         cp -R $1-iphoneos/*.framework $product_dir
         set +x
     fi

@@ -1,1 +1,4 @@
-add_library(cppLib cppLib.cpp)
+add_library(cppLib
+    cppLib.hpp
+    cppLib.cpp
+)
