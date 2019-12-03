@@ -20,8 +20,6 @@ add_library(
     ${TARGET_SOURCES}
 )
 
-install(TARGETS ${MACOSX_FRAMEWORK_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
-
 target_link_libraries(
     ${MACOSX_FRAMEWORK_NAME}
     PUBLIC cppLib
@@ -39,11 +37,11 @@ set_target_properties(${MACOSX_FRAMEWORK_NAME} PROPERTIES
     MACOSX_FRAMEWORK_IDENTIFIER ${MACOSX_FRAMEWORK_IDENTIFIER}
     MACOSX_FRAMEWORK_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/Info.plist.in
     # Mark which headers should public
-    PUBLIC_HEADER ${TARGET_HEADERS}
+    PUBLIC_HEADER "${TARGET_HEADERS}"
     ## ----------------------------------
     ## Architecture
     ## ----------------------------------
-    XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
+    XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "NO"
     XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Release] "NO"
     ## ----------------------------------
     ## Build Location (!!Must see IMPORTANT above)
@@ -94,3 +92,5 @@ set_target_properties(${MACOSX_FRAMEWORK_NAME} PROPERTIES
     ## ----------------------------------
     XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS "YES"
 )
+
+install(TARGETS ${MACOSX_FRAMEWORK_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
