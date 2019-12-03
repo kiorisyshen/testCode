@@ -213,6 +213,10 @@ message( STATUS " Output self-defined cmake variables" )
 message( STATUS "===========================" )
 message( STATUS "Target platform: ${TARGET_PLATFORM}" )
 message( STATUS "Build Tests: ${BUILD_TEST}" )
-message( STATUS "IOS sysroot: ${CMAKE_OSX_SYSROOT}" )
+
+if(${TARGET_PLATFORM} MATCHES "ios")
+    message( STATUS "IOS sysroot: ${CMAKE_OSX_SYSROOT}" )
+endif()
+
 
 message( STATUS "===========================" )

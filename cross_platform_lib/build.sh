@@ -34,11 +34,9 @@ function print_help {
     echo "    -u"
     echo "        Run all unit tests in desktop platform."
     echo "    -t"
-    echo "        Build without test."
+    echo "        Build with test."
     echo "    -s"
     echo "        Add iOS simulator support to the iOS build."
-    echo "    -x"
-    echo "        Generate Xcode project."
     echo ""
     echo "Build types:"
     echo "    release"
@@ -72,8 +70,8 @@ function print_help {
 
 function build_clean {
     echo "Cleaning build and Product directories..."
-    rm -Rf build
-    rm -Rf Product
+    rm -Rf build/*
+    rm -Rf Product/*
 }
 
 function build_desktop_target {
@@ -122,14 +120,17 @@ function build_ios_target {
 
     cd build/ios-${lc_target}
 
+    local product_dir=../../Product/ios/${lc_target}/
+    mkdir -p $product_dir
+
     if [[ ! -d "CMakeFiles" ]]; then
         if [[ "$BUILD_TESTS" == "true" ]]; then
             cmake \
                 -G "$BUILD_GENERATOR" \
                 -DCMAKE_BUILD_TYPE=$1 \
                 -DBUILD_TEST=ON \
-                -DCMAKE_INSTALL_PREFIX=../../Product/ios/${lc_target}/ \
-                -DCMAKE_TOOLCHAIN_FILE=../../cmake/toolchain-mac-ios.cmake \
+                -DCMAKE_INSTALL_PREFIX=$product_dir \
+                -DCMAKE_SYSTEM_NAME=iOS \
                 -DTARGET_PLATFORM=ios \
                 ../..
         else
@@ -137,18 +138,21 @@ function build_ios_target {
                 -G "$BUILD_GENERATOR" \
                 -DCMAKE_BUILD_TYPE=$1 \
                 -DBUILD_TEST=OFF \
-                -DCMAKE_INSTALL_PREFIX=../../Product/ios/${lc_target}/ \
-                -DCMAKE_TOOLCHAIN_FILE=../../cmake/toolchain-mac-ios.cmake \
+                -DCMAKE_INSTALL_PREFIX=$product_dir \
+                -DCMAKE_SYSTEM_NAME=iOS \
                 -DTARGET_PLATFORM=ios \
                 ../..
         fi
     fi
     
     if [[ "$BUILD_COMMAND" != "None" ]]; then
-        ${BUILD_COMMAND}
+        set -x
+        ${BUILD_COMMAND} -project *.xcodeproj -configuration $1 -sdk "iphoneos" -scheme "ALL_BUILD" build
 
         echo "Installing ${lc_target} in Product/ios/${lc_target}..."
-        ${BUILD_COMMAND} install
+        
+        cp -r src/public/ios/$1-iphoneos/*.framework $product_dir
+        set +x
     fi
 
     cd ../..
@@ -233,13 +237,13 @@ ISSUE_DESKTOP_BUILD=true
 ISSUE_WEB_BUILD=flase
 
 IOS_BUILD_SIMULATOR=false
-BUILD_TESTS=true
+BUILD_TESTS=false
 RUN_TESTS=false
 
 BUILD_GENERATOR=Ninja
 BUILD_COMMAND=ninja
 
-while getopts ":hcmp:utsx" opt; do
+while getopts ":hcmp:uts" opt; do
     case ${opt} in
         h)
             print_help
@@ -260,6 +264,8 @@ while getopts ":hcmp:utsx" opt; do
                 case ${platform} in
                     ios)
                         ISSUE_IOS_BUILD=true
+                        BUILD_GENERATOR=Xcode
+                        BUILD_COMMAND=xcodebuild
                     ;;
                     android)
                         ISSUE_ANDROID_BUILD=true
@@ -280,7 +286,7 @@ while getopts ":hcmp:utsx" opt; do
             done
             ;;
         t)
-            BUILD_TESTS=false
+            BUILD_TESTS=true
             ;;
         u)
             RUN_TESTS=true
@@ -288,10 +294,6 @@ while getopts ":hcmp:utsx" opt; do
         s)
             IOS_BUILD_SIMULATOR=true
             echo "iOS simulator support enabled."
-            ;;
-        x)
-            BUILD_GENERATOR=Xcode
-            BUILD_COMMAND="None"
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -328,29 +330,30 @@ mkdir -p Product
 
 if [[ "$ISSUE_CLEAN" == "true" ]]; then
     build_clean
-else
-    if [[ "$ISSUE_DESKTOP_BUILD" == "true" ]]; then
-        build_desktop
-        echo ""
-    fi
+    echo ""
+fi
 
-    if [[ "$ISSUE_ANDROID_BUILD" == "true" ]]; then
-        build_android
-        echo ""
-    fi
+if [[ "$ISSUE_DESKTOP_BUILD" == "true" ]]; then
+    build_desktop
+    echo ""
+fi
 
-    if [[ "$ISSUE_IOS_BUILD" == "true" ]]; then
-        build_ios
-        echo ""
-    fi
+if [[ "$ISSUE_ANDROID_BUILD" == "true" ]]; then
+    build_android
+    echo ""
+fi
 
-    if [[ "$ISSUE_WEB_BUILD" == "true" ]]; then
-        build_web
-        echo ""
-    fi
+if [[ "$ISSUE_IOS_BUILD" == "true" ]]; then
+    build_ios
+    echo ""
+fi
 
-    if [[ "$RUN_TESTS" == "true" ]]; then
-        run_tests
-    fi
+if [[ "$ISSUE_WEB_BUILD" == "true" ]]; then
+    build_web
+    echo ""
+fi
+
+if [[ "$RUN_TESTS" == "true" ]]; then
+    run_tests
 fi
 
