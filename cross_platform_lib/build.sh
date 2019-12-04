@@ -124,30 +124,30 @@ function build_ios_target {
             flag_build_tests=ON
         fi
 
-        teamids=()
+        local teamids=()
+        if [[ "$BUILD_TESTS" == "true" ]]; then
+            echo "============================="
+            local certificate=$(xcrun security find-certificate -a -c "iPhone" -p | openssl x509 -text | grep "Subject:")
+            echo $certificate
 
-        echo "============================="
-        local certificate=$(xcrun security find-certificate -a -c "iPhone" -p | openssl x509 -text | grep "Subject:")
-        echo $certificate
+            for item in $(echo $certificate | tr "," "\n")
+            do
+                if [[ $item == OU* ]]; then
+                    teamids+=($(echo $item| cut -d'=' -f 2))
+                fi
+            done
+            echo "============================="
+            echo "Please select your team id:"
+            for i in "${!teamids[@]}"; do
+                printf '%s) %s\n' "$i" "${teamids[i]}"
+            done
 
-        for item in $(echo $certificate | tr "," "\n")
-        do
-            if [[ $item == OU* ]]; then
-                teamids+=($(echo $item| cut -d'=' -f 2))
-            fi
-        done
-        echo "============================="
-        echo "Please select your team id:"
-        for i in "${!teamids[@]}"; do
-            printf '%s) %s\n' "$i" "${teamids[i]}"
-        done
+            read teamidx
 
-        read teamidx
+            echo "Selected certificate team id: ${teamids[$teamidx]}"
+            echo "============================="
 
-        echo "Selected certificate team id: ${teamids[$teamidx]}"
-        echo "============================="
-        
-        cmake \
+            cmake \
             -G "$BUILD_GENERATOR" \
             -DCMAKE_BUILD_TYPE=$1 \
             -DBUILD_TEST=$flag_build_tests \
@@ -159,6 +159,19 @@ function build_ios_target {
             "-DCMAKE_OSX_ARCHITECTURES=armv7;armv7s;arm64;x86_64" \
             -DDEVELOPMENT_TEAM_ID=${teamids[$teamidx]} \
             ../..
+        else
+            cmake \
+            -G "$BUILD_GENERATOR" \
+            -DCMAKE_BUILD_TYPE=$1 \
+            -DBUILD_TEST=$flag_build_tests \
+            -DCMAKE_INSTALL_PREFIX=$product_dir \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DTARGET_PLATFORM=ios \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=9.3 \
+            -DCMAKE_IOS_INSTALL_COMBINED=YES \
+            "-DCMAKE_OSX_ARCHITECTURES=armv7;armv7s;arm64;x86_64" \
+            ../..
+        fi
     fi
     
     if [[ "$BUILD_COMMAND" != "None" ]] && [[ "$BUILD_TESTS" == "false" ]]; then
