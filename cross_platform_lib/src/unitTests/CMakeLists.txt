@@ -1,6 +1,8 @@
-add_library(unitTest
+add_library(unitTest STATIC
     unitTest.hpp
     unitTest.cpp
 )
 
-target_link_libraries(unitTest cppLib)
+target_link_libraries(unitTest
+    PUBLIC cppLib
+)

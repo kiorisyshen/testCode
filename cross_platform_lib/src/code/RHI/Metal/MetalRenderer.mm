@@ -29,6 +29,7 @@
         NSError *error = NULL;
         
         NSString *libraryFile    = [[[NSBundle bundleForClass:self] URLForResource:@"Main" withExtension:@".metallib"] absoluteString];
+        NSLog(@"Library path: %@", libraryFile);
         id<MTLLibrary> myLibrary = [_device newLibraryWithFile:libraryFile error:&error];
         if (!myLibrary) {
             NSLog(@"Failed to in create metal library, error %@", error);

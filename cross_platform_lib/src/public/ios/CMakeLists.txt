@@ -62,7 +62,7 @@ set(TARGET_SOURCES
 )
 
 add_library(
-    ${MACOSX_FRAMEWORK_NAME}
+    ${MACOSX_FRAMEWORK_NAME} STATIC
     ${TARGET_HEADERS}
     ${TARGET_SOURCES}
     Main.metallib

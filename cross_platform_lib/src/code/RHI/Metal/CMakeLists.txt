@@ -1,7 +1,7 @@
 find_library(MTK_LIBRARY MetalKit required)
 find_library(METAL_LIBRARY Metal required)
 
-add_library(MetalRHI
+add_library(MetalRHI OBJECT
     MetalRenderer.h
     MetalRenderer.mm
 )

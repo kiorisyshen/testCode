@@ -1,4 +1,6 @@
-add_library(pubCppLib pubCppLib.cpp)
+add_library(pubCppLib STATIC
+pubCppLib.cpp
+)
 target_link_libraries(pubCppLib cppLib)
 
 if(BUILD_TEST)

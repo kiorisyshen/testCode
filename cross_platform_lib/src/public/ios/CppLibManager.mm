@@ -10,9 +10,9 @@
     MetalRenderer *_renderer;
 }
 
-- (bool)initWithView:(nonnull NSObject *)view {
+ - (bool)initWithView:(nonnull NSObject *)view {
     _view        = (MTKView *)view;
-    
+
     _view.device = MTLCreateSystemDefaultDevice();
     if (!_view.device) {
         NSLog(@"Metal is not supported on this device");
