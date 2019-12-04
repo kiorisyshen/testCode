@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.15)
-project(iosTestMain)
-
 set(MACOSX_TESTAPP_NAME "iosTestMain")
 set(MACOSX_TESTAPP_IDENTIFIER "com.dji.gspro.3dengine.test")
 
