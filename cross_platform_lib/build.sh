@@ -124,6 +124,29 @@ function build_ios_target {
             flag_build_tests=ON
         fi
 
+        teamids=()
+
+        echo "============================="
+        local certificate=$(xcrun security find-certificate -a -c "iPhone" -p | openssl x509 -text | grep "Subject:")
+        echo $certificate
+
+        for item in $(echo $certificate | tr "," "\n")
+        do
+            if [[ $item == OU* ]]; then
+                teamids+=($(echo $item| cut -d'=' -f 2))
+            fi
+        done
+        echo "============================="
+        echo "Please select your team id:"
+        for i in "${!teamids[@]}"; do
+            printf '%s) %s\n' "$i" "${teamids[i]}"
+        done
+
+        read teamidx
+
+        echo "Selected certificate team id: ${teamids[$teamidx]}"
+        echo "============================="
+        
         cmake \
             -G "$BUILD_GENERATOR" \
             -DCMAKE_BUILD_TYPE=$1 \
@@ -134,6 +157,7 @@ function build_ios_target {
             -DCMAKE_OSX_DEPLOYMENT_TARGET=9.3 \
             -DCMAKE_IOS_INSTALL_COMBINED=YES \
             "-DCMAKE_OSX_ARCHITECTURES=armv7;armv7s;arm64;x86_64" \
+            -DDEVELOPMENT_TEAM_ID=${teamids[$teamidx]} \
             ../..
     fi
     
