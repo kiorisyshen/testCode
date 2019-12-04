@@ -8,6 +8,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)trigerLib:(NSInteger)number;
 
+- (bool)initWithView:(nonnull NSObject *)view;
+
 #ifdef BUILD_TEST
 - (void)runUnitTests;
 #endif

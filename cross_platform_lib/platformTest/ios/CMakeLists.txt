@@ -1,6 +1,9 @@
 set(MACOSX_TESTAPP_NAME "iosTestMain")
 set(MACOSX_TESTAPP_IDENTIFIER "com.dji.gspro.3dengine.test")
 
+find_library(MTK_LIBRARY MetalKit required)
+find_library(METAL_LIBRARY Metal required)
+
 set(
     SOURCES
     sources/AppDelegate.h
@@ -57,4 +60,6 @@ target_link_libraries(
     "-framework Foundation"
     "-framework UIKit"
     pubCppLib
+    ${MTK_LIBRARY}
+    ${METAL_LIBRARY}
 )
