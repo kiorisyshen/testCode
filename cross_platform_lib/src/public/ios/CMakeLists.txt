@@ -58,8 +58,8 @@ set_target_properties(${MACOSX_FRAMEWORK_NAME} PROPERTIES
     # Enable iPhone,iPad, cmake default is iPhone
     XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
     # Enable framework can archive, cmake default is NO
-    XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
-    XCODE_ATTRIBUTE_INSTALL_PATH "$(LOCAL_LIBRARY_DIR)/Frameworks"
+    # XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
+    # XCODE_ATTRIBUTE_INSTALL_PATH "$(LOCAL_LIBRARY_DIR)/Frameworks"
     ## ----------------------------------
     ## Link
     ## ----------------------------------

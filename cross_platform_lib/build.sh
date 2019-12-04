@@ -91,7 +91,7 @@ function build_desktop_target {
         cmake \
             -G "$BUILD_GENERATOR" \
             -DCMAKE_BUILD_TYPE=$1 \
-            -DBUILD_TEST=ON \
+            -DBUILD_TEST=$flag_build_tests \
             -DCMAKE_INSTALL_PREFIX=../../Product/desktop/${lc_target}/ \
             -DTARGET_PLATFORM=desktop \
             ../..
@@ -127,7 +127,7 @@ function build_ios_target {
         cmake \
             -G "$BUILD_GENERATOR" \
             -DCMAKE_BUILD_TYPE=$1 \
-            -DBUILD_TEST=flag_build_tests \
+            -DBUILD_TEST=$flag_build_tests \
             -DCMAKE_INSTALL_PREFIX=$product_dir \
             -DCMAKE_SYSTEM_NAME=iOS \
             -DTARGET_PLATFORM=ios \
@@ -137,7 +137,7 @@ function build_ios_target {
             ../..
     fi
     
-    if [[ "$BUILD_COMMAND" != "None" ]]; then
+    if [[ "$BUILD_COMMAND" != "None" ]] && [[ "$BUILD_TESTS" == "false" ]]; then
         cmake --build . --config $1 --target install
     fi
 
