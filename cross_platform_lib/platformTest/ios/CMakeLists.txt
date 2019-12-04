@@ -25,10 +25,10 @@ add_executable(
     ${STORYBOARDS}
 )
 
-# add_dependencies(
-#     ${MACOSX_TESTAPP_NAME}
-#     pubCppLib
-# )
+add_dependencies(
+    ${MACOSX_TESTAPP_NAME}
+    pubCppLib
+)
 
 set_target_properties(
     ${MACOSX_TESTAPP_NAME}
@@ -58,5 +58,5 @@ target_link_libraries(
     "-framework CoreGraphics"
     "-framework Foundation"
     "-framework UIKit"
-    # pubCppLib
+    pubCppLib
 )
