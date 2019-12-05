@@ -30,11 +30,11 @@
         
         NSError *error = NULL;
         
-        
 #ifdef BUILD_TEST
         id<MTLLibrary> myLibrary = [_device newDefaultLibrary];
 #else
-        NSString *libraryFile = [[[[NSBundle mainBundle] URLForResource:@"Frameworks/pubCppLib" withExtension:@"framework"] URLByAppendingPathComponent:@"default.metallib"] absoluteString];
+        NSString *frameworkPath = [[NSBundle mainBundle] pathForResource:@"Frameworks/pubCppLib" ofType:@"framework"];
+        NSString *libraryFile = [frameworkPath stringByAppendingPathComponent:@"Main.metallib"];
         id<MTLLibrary> myLibrary = [_device newLibraryWithFile:libraryFile error:&error];
 #endif
         if (!myLibrary) {
@@ -89,8 +89,6 @@ typedef struct {
         { { -0.5,  -0.5 }, { 0, 1, 0, 1 } },
         { {    0,   0.5 }, { 0, 0, 1, 1 } },
     };
-    
-    std::cout << sizeof(triangleVertices) << std::endl;
 
     // Create a new command buffer for each render pass to the current drawable.
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
