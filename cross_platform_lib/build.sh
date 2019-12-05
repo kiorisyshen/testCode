@@ -110,10 +110,10 @@ function build_desktop_target {
 function build_ios_target {
     local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
 
-    echo "Building $lc_target in $PROJECT_ROOT/build/ios..."
-    mkdir -p $PROJECT_ROOT/build/ios
+    echo "Building $lc_target in $PROJECT_ROOT/build/ios-${lc_target}..."
+    mkdir -p $PROJECT_ROOT/build/ios-${lc_target}
 
-    cd $PROJECT_ROOT/build/ios
+    cd $PROJECT_ROOT/build/ios-${lc_target}
 
     local product_dir=$PROJECT_ROOT/Product/ios/${lc_target}/
     mkdir -p $product_dir
@@ -232,12 +232,12 @@ function build_web {
 function run_tests {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Runing tests - Debug"
-        ./build/desktop-debug/platformTest/desktop/unitTestMain
+        $PROJECT_ROOT/build/desktop-debug/platformTest/desktop/unitTestMain
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
         echo "Runing tests - Release"
-        ./build/desktop-release/platformTest/desktop/unitTestMain
+        $PROJECT_ROOT/build/desktop-release/platformTest/desktop/unitTestMain
     fi
 }
 
