@@ -181,6 +181,43 @@ function build_ios_target {
     cd $PROJECT_ROOT
 }
 
+function build_web_target {
+    local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
+
+    echo "Building $lc_target in $PROJECT_ROOT/build/web-${lc_target}..."
+    mkdir -p $PROJECT_ROOT/build/web-${lc_target}
+
+    local product_dir=$PROJECT_ROOT/Product/web/${lc_target}/
+    mkdir -p $product_dir
+
+    cd $PROJECT_ROOT/build/web-${lc_target}
+
+    if [[ ! -d "CMakeFiles" ]]; then
+        local flag_build_tests=OFF
+        if [[ "$BUILD_TESTS" == "true" ]]; then
+            flag_build_tests=ON
+        fi
+
+        cmake \
+            -G "$BUILD_GENERATOR" \
+            -DCMAKE_BUILD_TYPE=$1 \
+            -DBUILD_TEST=$flag_build_tests \
+            -DCMAKE_INSTALL_PREFIX=$product_dir \
+            -DTARGET_PLATFORM=web \
+            -DCMAKE_TOOLCHAIN_FILE="$PROJECT_ROOT/ThirdParty/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake" \
+            ../..
+    fi
+    
+    if [[ "$BUILD_COMMAND" != "None" ]]; then
+        ${BUILD_COMMAND}
+
+        echo "Installing ${lc_target} in $PROJECT_ROOT/Product/web/${lc_target}..."
+        ${BUILD_COMMAND} install
+    fi
+
+    cd $PROJECT_ROOT
+}
+
 function build_desktop {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building desktop - Debug"
@@ -218,14 +255,26 @@ function build_android {
 }
 
 function build_web {
+    echo "Checking EMSDK..."
+    # Check EMSDK
+    EMSDK_GIT=$PROJECT_ROOT/ThirdParty/emsdk
+    if [ -d $EMSDK_GIT/upstream ] 
+    then
+        $EMSDK_GIT/emsdk update-tags
+    else
+        $EMSDK_GIT/emsdk install latest
+    fi
+    $EMSDK_GIT/emsdk activate latest
+    export EMSCRIPTEN="$EMSDK_GIT/upstream/emscripten"
+
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building web - Debug"
-        # build_desktop_target "Debug" "$1"
+        build_web_target "Debug"
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
         echo "Building web - Release"
-        # build_desktop_target "Release" "$1"
+        build_web_target "Release"
     fi
 }
 

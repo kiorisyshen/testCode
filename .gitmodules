@@ -1,3 +1,6 @@
 [submodule "wasm/ThirdParty/src/SDL"]
 	path = wasm/ThirdParty/src/SDL
 	url = https://github.com/kiorisyshen/SDL.git
+[submodule "cross_platform_lib/ThirdParty/emsdk"]
+	path = cross_platform_lib/ThirdParty/emsdk
+	url = https://github.com/emscripten-core/emsdk.git

@@ -219,5 +219,9 @@ if(${TARGET_PLATFORM} MATCHES "ios")
     message( STATUS "IOS target version: ${CMAKE_OSX_DEPLOYMENT_TARGET}")
 endif()
 
+if(${TARGET_PLATFORM} MATCHES "web")
+    message( STATUS "Emscripten path: ${EMSCRIPTEN_ROOT_PATH}" )
+endif()
+
 
 message( STATUS "===========================" )
