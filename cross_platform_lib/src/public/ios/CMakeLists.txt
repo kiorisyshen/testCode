@@ -7,48 +7,58 @@ set(MACOSX_FRAMEWORK_SHORT_VERSION_STRING "1.0.0")
 set(SHADER_SOURCES
     testShader
 )
-foreach(SHADER
-        IN
-        LISTS
-        SHADER_SOURCES)
-    add_custom_command(OUTPUT ${SHADER}.air
-                        COMMAND xcrun
-                                -sdk
-                                ${CMAKE_OSX_SYSROOT}
-                                metal
-                                -g
-                                -MO
-                                -c
-                                ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/${SHADER}.metal
-                                -o
-                                ${SHADER}.air
-                        COMMENT "Compile ${SHADER}.metal --> ${SHADER}.air"
-                        DEPENDS ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/${SHADER}.metal)
-    list(APPEND AIRS ${SHADER}.air)
-endforeach(SHADER)
+# foreach(SHADER
+#         IN
+#         LISTS
+#         SHADER_SOURCES)
+#     add_custom_command(OUTPUT ${SHADER}.air
+#                         COMMAND xcrun
+#                                 -sdk
+#                                 ${CMAKE_OSX_SYSROOT}
+#                                 metal
+#                                 -g
+#                                 -MO
+#                                 -c
+#                                 ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/${SHADER}.metal
+#                                 -o
+#                                 ${SHADER}.air
+#                         COMMENT "Compile ${SHADER}.metal --> ${SHADER}.air"
+#                         DEPENDS ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/${SHADER}.metal)
+#     list(APPEND AIRS ${SHADER}.air)
+# endforeach(SHADER)
 
-add_custom_command(OUTPUT Main.metalar
-                    COMMAND xcrun
-                            -sdk
-                            ${CMAKE_OSX_SYSROOT}
-                            metal-ar
-                            rcv
-                            Main.metalar
-                            ${AIRS}
-                    COMMENT "Archive ${AIRS} --> Main.metalar"
-                    DEPENDS ${AIRS})
+# add_custom_command(OUTPUT Main.metalar
+#                     COMMAND xcrun
+#                             -sdk
+#                             ${CMAKE_OSX_SYSROOT}
+#                             metal-ar
+#                             rcv
+#                             Main.metalar
+#                             ${AIRS}
+#                     COMMENT "Archive ${AIRS} --> Main.metalar"
+#                     DEPENDS ${AIRS})
 
-add_custom_command(OUTPUT Main.metallib
-                    COMMAND xcrun
-                            -sdk
-                            ${CMAKE_OSX_SYSROOT}
-                            metallib
-                            Main.metalar
-                            -split-module-without-linking
-                            -o
-                            Main.metallib
-                    COMMENT "Compile Main.metalar --> Main.metallib"
-                    DEPENDS Main.metalar)
+# add_custom_target(Main.metallib
+#                     COMMAND xcrun
+#                             -sdk
+#                             ${CMAKE_OSX_SYSROOT}
+#                             metallib
+#                             Main.metalar
+#                             -split-module-without-linking
+#                             -o
+#                             Main.metallib
+#                     COMMENT "Compile Main.metalar --> Main.metallib"
+#                     DEPENDS Main.metalar)
+
+# set(RESOURCE_FILES
+#     Main.metallib
+#     CACHE INTERNAL "RESOURCE_FILES"
+# )
+
+set(RESOURCE_FILES
+    ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/${SHADER_SOURCES}.metal
+    CACHE INTERNAL "RESOURCE_FILES"
+)
 
 find_library(APPLE_UIKit NAMES UIKit)
 find_library(APPLE_CoreGraphics NAMES CoreGraphics)
@@ -65,8 +75,13 @@ add_library(
     ${MACOSX_FRAMEWORK_NAME} STATIC
     ${TARGET_HEADERS}
     ${TARGET_SOURCES}
-    Main.metallib
+    ${RESOURCE_FILES}
 )
+
+# add_dependencies(
+#     ${MACOSX_FRAMEWORK_NAME}
+#     Main.metallib
+# )
 
 target_link_libraries(
     ${MACOSX_FRAMEWORK_NAME}
@@ -79,10 +94,6 @@ target_link_libraries(
 if(BUILD_TEST)
     target_link_libraries(${MACOSX_FRAMEWORK_NAME} PUBLIC unitTest)
 endif(BUILD_TEST)
-
-set(RESOURCE_FILES
-    Main.metallib
-)
 
 set_target_properties(${MACOSX_FRAMEWORK_NAME} PROPERTIES
     FRAMEWORK TRUE
@@ -148,3 +159,4 @@ set_target_properties(${MACOSX_FRAMEWORK_NAME} PROPERTIES
 )
 
 install(TARGETS ${MACOSX_FRAMEWORK_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${RESOURCE_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX})

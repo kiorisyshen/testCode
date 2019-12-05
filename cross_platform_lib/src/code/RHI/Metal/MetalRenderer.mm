@@ -1,5 +1,7 @@
 
 #import "MetalRenderer.h"
+#include <iostream>
+//#include <simd/simd.h>
 
 #if !__has_feature(objc_arc)
 #error "ARC is off"
@@ -28,9 +30,7 @@
         
         NSError *error = NULL;
         
-        NSString *libraryFile    = [[[NSBundle bundleForClass:self] URLForResource:@"Main" withExtension:@".metallib"] absoluteString];
-        NSLog(@"Library path: %@", libraryFile);
-        id<MTLLibrary> myLibrary = [_device newLibraryWithFile:libraryFile error:&error];
+        id<MTLLibrary> myLibrary = [_device newDefaultLibrary];
         if (!myLibrary) {
             NSLog(@"Failed to in create metal library, error %@", error);
             return nil;
@@ -61,12 +61,6 @@
     return self;
 }
 
-- (bool)InitializeShaders {
-    bool succ = true;
-
-    return succ;
-}
-
 /// Called whenever view changes orientation or is resized
 - (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size {
     // Save the size of the drawable to pass to the vertex shader.
@@ -74,15 +68,23 @@
     _viewportSize_y = size.height;
 }
 
+typedef struct {
+    vector_float2 position;
+    vector_float4 color;
+} AAPLVertex;
+
 /// Called whenever the view needs to render a frame.
 - (void)drawInMTKView:(nonnull MTKView *)view {
-    static const float triangleVertices[] =
+    
+    static const AAPLVertex triangleVertices[] =
     {
         // 2D positions,    RGBA colors
-        0.5, -0.5, 1, 0, 0, 1,
-        -0.5, -0.5, 0, 1, 0, 1,
-        0, 0.5, 0, 0, 1, 1,
+        { {  0.5,  -0.5 }, { 1, 0, 0, 1 } },
+        { { -0.5,  -0.5 }, { 0, 1, 0, 1 } },
+        { {    0,   0.5 }, { 0, 0, 1, 1 } },
     };
+    
+    std::cout << sizeof(triangleVertices) << std::endl;
 
     // Create a new command buffer for each render pass to the current drawable.
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];

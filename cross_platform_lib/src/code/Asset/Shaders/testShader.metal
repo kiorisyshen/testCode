@@ -4,13 +4,13 @@
 #include <metal_stdlib>
 
 struct vert_in {
-    float2 inputPosition;
-    float4 inputColor;
+    vector_float2 inputPosition;
+    vector_float4 inputColor;
 };
 
 struct vert_out {
-    float4 position [[position]];
-    float4 color;
+    vector_float4 position [[position]];
+    vector_float4 color;
 };
 
 vertex vert_out
@@ -21,7 +21,7 @@ vertexShader(uint vertexID [[vertex_id]],
     // Index into the array of positions to get the current vertex.
     // The positions are specified in pixel dimensions (i.e. a value of 100
     // is 100 pixels from the origin).
-    float2 pixelSpacePosition = vertices[vertexID].inputPosition.xy;
+    vector_float2 pixelSpacePosition = vertices[vertexID].inputPosition.xy;
 
     // To convert from positions in pixel space to positions in clip-space,
     //  divide the pixel coordinates by half the size of the viewport.

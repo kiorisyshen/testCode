@@ -9,7 +9,9 @@
 #import "ViewController.h"
 #import "public/ios/include/CppLibManager.h"
 
-@interface ViewController ()
+@interface ViewController () {
+    CppLibManager *_testManager;
+}
 
 @end
 
@@ -19,10 +21,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    CppLibManager *testManager = [[CppLibManager alloc] init];
-    [testManager trigerLib:3];
+    _testManager = [[CppLibManager alloc] init];
+    [_testManager trigerLib:3];
     
-    [testManager initWithView:self.view];
+    [_testManager initWithView:self.view];
 }
 
 @end

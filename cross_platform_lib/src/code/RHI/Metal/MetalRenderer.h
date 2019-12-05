@@ -5,6 +5,4 @@
 
 - (nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)mtkView;
 
-- (bool)InitializeShaders;
-
 @end

@@ -23,6 +23,7 @@ add_executable(
     ${MACOSX_TESTAPP_NAME}
     ${SOURCES}
     ${STORYBOARDS}
+    ${RESOURCE_FILES}
 )
 
 add_dependencies(
@@ -42,7 +43,7 @@ set_target_properties(
     XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_WEAK "YES"
     # XCODE_ATTRIBUTE_INSTALL_PATH "${CMAKE_BINARY_DIR}/ProductRelease"
     # XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES "NO"
-    RESOURCE "${STORYBOARDS}"
+    RESOURCE "${STORYBOARDS};${RESOURCE_FILES}"
 )
 
 set_target_properties(
