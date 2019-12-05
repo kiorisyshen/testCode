@@ -1,7 +1,7 @@
 
 #import "MetalRenderer.h"
 #include <iostream>
-//#include <simd/simd.h>
+#include "config.hpp"
 
 #if !__has_feature(objc_arc)
 #error "ARC is off"
@@ -30,7 +30,13 @@
         
         NSError *error = NULL;
         
+        
+#ifdef BUILD_TEST
         id<MTLLibrary> myLibrary = [_device newDefaultLibrary];
+#else
+        NSString *libraryFile = [[[[NSBundle mainBundle] URLForResource:@"Frameworks/pubCppLib" withExtension:@"framework"] URLByAppendingPathComponent:@"default.metallib"] absoluteString];
+        id<MTLLibrary> myLibrary = [_device newLibraryWithFile:libraryFile error:&error];
+#endif
         if (!myLibrary) {
             NSLog(@"Failed to in create metal library, error %@", error);
             return nil;
