@@ -70,17 +70,17 @@ function print_help {
 
 function build_clean {
     echo "Cleaning build and Product directories..."
-    rm -Rf build/*
-    rm -Rf Product/*
+    rm -Rf $PROJECT_ROOT/build/*
+    rm -Rf $PROJECT_ROOT/Product/*
 }
 
 function build_desktop_target {
     local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
 
-    echo "Building $lc_target in build/desktop-${lc_target}..."
-    mkdir -p build/desktop-${lc_target}
+    echo "Building $lc_target in $PROJECT_ROOT/build/desktop-${lc_target}..."
+    mkdir -p $PROJECT_ROOT/build/desktop-${lc_target}
 
-    cd build/desktop-${lc_target}
+    cd $PROJECT_ROOT/build/desktop-${lc_target}
 
     if [[ ! -d "CMakeFiles" ]]; then
         local flag_build_tests=OFF
@@ -92,7 +92,7 @@ function build_desktop_target {
             -G "$BUILD_GENERATOR" \
             -DCMAKE_BUILD_TYPE=$1 \
             -DBUILD_TEST=$flag_build_tests \
-            -DCMAKE_INSTALL_PREFIX=../../Product/desktop/${lc_target}/ \
+            -DCMAKE_INSTALL_PREFIX=$PROJECT_ROOT/Product/desktop/${lc_target}/ \
             -DTARGET_PLATFORM=desktop \
             ../..
     fi
@@ -100,22 +100,22 @@ function build_desktop_target {
     if [[ "$BUILD_COMMAND" != "None" ]]; then
         ${BUILD_COMMAND}
 
-        echo "Installing ${lc_target} in Product/desktop/${lc_target}..."
+        echo "Installing ${lc_target} in $PROJECT_ROOT/Product/desktop/${lc_target}..."
         ${BUILD_COMMAND} install
     fi
 
-    cd ../..
+    cd $PROJECT_ROOT
 }
 
 function build_ios_target {
     local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
 
-    echo "Building $lc_target in build/ios..."
-    mkdir -p build/ios
+    echo "Building $lc_target in $PROJECT_ROOT/build/ios..."
+    mkdir -p $PROJECT_ROOT/build/ios
 
-    cd build/ios
+    cd $PROJECT_ROOT/build/ios
 
-    local product_dir=../../Product/ios/${lc_target}/
+    local product_dir=$PROJECT_ROOT/Product/ios/${lc_target}/
     mkdir -p $product_dir
 
     if [[ ! -d "CMakeFiles" ]]; then
@@ -178,7 +178,7 @@ function build_ios_target {
         cmake --build . --config $1 --target install
     fi
 
-    cd ../..
+    cd $PROJECT_ROOT
 }
 
 function build_desktop {
@@ -259,6 +259,8 @@ RUN_TESTS=false
 
 BUILD_GENERATOR=Ninja
 BUILD_COMMAND=ninja
+
+PROJECT_ROOT="$(pwd)"
 
 while getopts ":hcmp:uts" opt; do
     case ${opt} in
@@ -342,8 +344,8 @@ for arg; do
     fi
 done
 
-mkdir -p build
-mkdir -p Product
+mkdir -p $PROJECT_ROOT/build
+mkdir -p $PROJECT_ROOT/Product
 
 if [[ "$ISSUE_CLEAN" == "true" ]]; then
     build_clean
