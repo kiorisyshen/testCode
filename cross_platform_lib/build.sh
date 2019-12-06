@@ -211,8 +211,8 @@ function build_web_target {
     if [[ "$BUILD_COMMAND" != "None" ]]; then
         ${BUILD_COMMAND}
 
-        # echo "Installing ${lc_target} in $PROJECT_ROOT/Product/web/${lc_target}..."
-        # ${BUILD_COMMAND} install
+        echo "Installing ${lc_target} in $PROJECT_ROOT/Product/web/${lc_target}..."
+        ${BUILD_COMMAND} install
     fi
 
     cd $PROJECT_ROOT
@@ -354,6 +354,7 @@ while getopts ":hcmp:uts" opt; do
             done
             ;;
         t)
+            ISSUE_DEBUG_BUILD=true
             BUILD_TESTS=true
             ;;
         u)
