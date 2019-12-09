@@ -12,6 +12,7 @@
         var Module = {
             startRendering: function () {
                 if (!isStartRendering) {
+                    isStartRendering = true;
                     Module.initWithCanvas(document.getElementsByTagName('canvas')[0]);
                     Module.runRenderLoop();
                 } else {
