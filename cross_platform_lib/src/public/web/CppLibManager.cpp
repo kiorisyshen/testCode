@@ -19,7 +19,7 @@ void WebInterface::CppLibManager::initializeLib() {
 }
 
 void WebInterface::CppLibManager::renderFrame() {
-    std::cout << "WebInterface::CppLibManager::renderFrame" << std::endl;
+    // std::cout << "WebInterface::CppLibManager::renderFrame" << std::endl;
     _oglRenderer.renderFrame();
 }
 
