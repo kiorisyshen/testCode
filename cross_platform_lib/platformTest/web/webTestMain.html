@@ -9,22 +9,19 @@
 <body>
     <div style="display: flex; flex-direction: column; align-items: center;">
         <h1 id="title">pubCppLib web tester</h1>
-        <input type="button" value="triger Tests" onclick="onButtonClick()">
+        <canvas width="640" height="480"></canvas>
+        <input type="button" value="triger Tests" onclick="Module.trigerTests()">
+        <input type="button" value="start Rendering" onclick="Module.startRendering()">
     </div>
 </body>
 <script async type="text/javascript" src="../../Product/web/debug/pubCppLib.js"></script>
 <script>
-    var pubCppLib;
-
     var Module = {
-        onRuntimeInitialized: function () {
-            pubCppLib = new Module.CppLibManager();
+        startRendering: function () {
+            Module.initWithCanvas(document.getElementsByTagName('canvas')[0]);
+            Module.runRenderLoop();
         }
     };
-
-    function onButtonClick() {
-        pubCppLib.trigerLib(5);
-    }
 </script>
 
 </html>
