@@ -21,11 +21,11 @@ if(NOT BUILD_TEST)
                                     -g
                                     -MO
                                     -c
-                                    ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/${SHADER}.metal
+                                    ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/Metal/${SHADER}.metal
                                     -o
                                     ${SHADER}.air
                             COMMENT "Compile ${SHADER}.metal --> ${SHADER}.air"
-                            DEPENDS ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/${SHADER}.metal)
+                            DEPENDS ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/Metal/${SHADER}.metal)
         list(APPEND AIRS ${SHADER}.air)
     endforeach(SHADER)
 
@@ -57,7 +57,7 @@ if(NOT BUILD_TEST)
     )
 else()
     set(RESOURCE_FILES
-        ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/${SHADER_SOURCES}.metal
+        ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/Metal/${SHADER_SOURCES}.metal
         CACHE INTERNAL "RESOURCE_FILES"
     )
 endif(BUILD_TEST)
