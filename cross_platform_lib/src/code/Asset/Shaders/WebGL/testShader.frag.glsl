@@ -1,8 +1,10 @@
 precision mediump float;
-precision highp int;
+// precision highp int;
 
-uniform vec4 aVertexColor;
+// uniform vec4 fColor;
+
+varying highp vec4 fColor;
 
 void main() {
-    gl_FragColor = aVertexColor;
+    gl_FragColor = fColor;
 }

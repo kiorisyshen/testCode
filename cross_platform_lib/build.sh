@@ -260,7 +260,8 @@ function build_web {
     EMSDK_GIT=$PROJECT_ROOT/ThirdParty/emsdk
     if [ -d $EMSDK_GIT/upstream ] 
     then
-        $EMSDK_GIT/emsdk update-tags
+        echo ""
+        # $EMSDK_GIT/emsdk update-tags
     else
         $EMSDK_GIT/emsdk install latest
     fi

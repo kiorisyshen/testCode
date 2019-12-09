@@ -171,6 +171,7 @@ static bool LoadShaderProgram(const ShaderSourceList &source, GLuint &shaderProg
     if (status != 1) {
         // If it did not link then write the syntax error message out to a text file for review.
         OutputLinkerErrorMessage(shaderProgram);
+        glDeleteProgram(shaderProgram);
         return false;
     }
 
@@ -201,12 +202,35 @@ void OpenGLRenderer::initialize() {
     } else {
         std::cout << "Successfully load shader program!" << std::endl;
     }
+
+    // Bind vPosition to attribute 0
+    glBindAttribLocation(shaderProgram, 0, "vPosition");
+    glBindAttribLocation(shaderProgram, 1, "vColor");
+
+    glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
+    glViewport(0, 0, 640, 480);
 }
 
 void OpenGLRenderer::renderFrame() {
-    // std::cout << "OpenGLRenderer::renderFrame" << std::endl;
-    glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glUseProgram(shaderProgram);
+
+    static GLfloat vVertices[] = {0.0f, 0.5f, 0.0f,
+                                  -0.5f, -0.5f, 0.0f,
+                                  0.5f, -0.5f, 0.0f};
+
+    static GLfloat vColor[] = {1.0f, 0.0f, 0.0f,
+                               0.0f, 1.0f, 0.0f,
+                               0.0f, 0.0f, 1.0f};
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, vColor);
+    glEnableVertexAttribArray(1);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glFlush();
 }
