@@ -4,25 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <title>pubCppLib web tester</title>
+    <script async type="text/javascript" src="pubCppLib.js"></script>
+    <script async type="text/javascript" src="Asset.preload.js"></script>
+    <script>
+        var isStartRendering = false;
+
+        var Module = {
+            startRendering: function () {
+                if (!isStartRendering) {
+                    Module.initWithCanvas(document.getElementsByTagName('canvas')[0]);
+                    Module.runRenderLoop();
+                } else {
+                    console.warn("Already started rendering!");
+                }
+            }
+        };
+
+        window.testModule = Module;
+    </script>
 </head>
 
 <body>
     <div style="display: flex; flex-direction: column; align-items: center;">
         <h1 id="title">pubCppLib web tester</h1>
         <canvas width="640" height="480"></canvas>
-        <input type="button" value="triger Tests" onclick="Module.trigerTests()">
-        <input type="button" value="start Rendering" onclick="Module.startRendering()">
+        <input type="button" value="triger Tests" onclick="testModule.trigerTests()">
+        <input type="button" value="start Rendering" onclick="testModule.startRendering()">
     </div>
 </body>
-<script async type="text/javascript" src="pubCppLib.js"></script>
-<script async type="text/javascript" src="Asset.preload.js"></script>
-<script>
-    var Module = {
-        startRendering: function () {
-            Module.initWithCanvas(document.getElementsByTagName('canvas')[0]);
-            Module.runRenderLoop();
-        }
-    };
-</script>
 
 </html>
