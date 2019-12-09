@@ -35,6 +35,7 @@ Module.runRenderLoop = function () {
         if (Module.pubCppLib) {
             Module.pubCppLib.renderFrame();
         }
+        requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
 }
