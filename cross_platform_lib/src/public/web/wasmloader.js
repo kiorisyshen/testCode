@@ -11,14 +11,14 @@ Module.onRuntimeInitialized = function () {
 
 Module.initWithCanvas = function (canvas) {
     options = {
-        majorVersion: 2,
+        majorVersion: 1,
         minorVersion: 0,
         antialias: false,
         stencil: true,
         enableExtensionsByDefault: true
     };
-    // Current use webgl 2.0
-    const ctx = canvas.getContext("webgl2", options);
+    // use webgl 1.0 for safari
+    const ctx = canvas.getContext("webgl", options);
     const handle = GL.registerContext(ctx, options);
     GL.makeContextCurrent(handle);
     Module.pubCppLib.initializeLib();
