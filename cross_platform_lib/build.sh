@@ -72,6 +72,9 @@ function build_clean {
     echo "Cleaning build and Product directories..."
     rm -Rf $PROJECT_ROOT/build/*
     rm -Rf $PROJECT_ROOT/Product/*
+    cd $PROJECT_ROOT/platformTest/android
+    ./gradlew clean
+    cd $PROJECT_ROOT
 }
 
 function build_desktop_target {
@@ -218,6 +221,24 @@ function build_web_target {
     cd $PROJECT_ROOT
 }
 
+
+function build_android_target {
+    local lc_target=`echo $1 | tr '[:upper:]' '[:lower:]'`
+
+    echo "Building $lc_target using $PROJECT_ROOT/platformTest/android/gradlew..."
+    cd $PROJECT_ROOT/platformTest/android
+
+    if [[ "$BUILD_COMMAND" != "None" ]]; then
+        ./gradlew :cpplibmanager:bundle$1
+
+        echo "Installing ${lc_target} in $PROJECT_ROOT/Product/android/${lc_target}..."
+        mkdir -p $PROJECT_ROOT/Product/android/${lc_target}
+        cp cpplibmanager/build/outputs/aar/*.aar $PROJECT_ROOT/Product/android/${lc_target}
+    fi
+
+    cd $PROJECT_ROOT
+}
+
 function build_desktop {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building desktop - Debug"
@@ -245,12 +266,12 @@ function build_ios {
 function build_android {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building android - Debug"
-        # build_desktop_target "Debug" "$1"
+        build_android_target "DebugAar"
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
         echo "Building android - Release"
-        # build_desktop_target "Release" "$1"
+        build_android_target "Release"
     fi
 }
 
