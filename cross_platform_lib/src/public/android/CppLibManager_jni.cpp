@@ -51,3 +51,12 @@ Java_com_example_cpplibmanager_GLRenderer_resizeView(
 
     return 0;
 }
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_example_cpplibmanager_GLRenderer_initializeShaderProgramFromString(
+        JNIEnv *env,
+        jobject /* this */,
+        jstring vertContent, jstring fragContent) {
+    return OpenGLESRenderer::initializeShaderProgramFromString((*env).GetStringUTFChars(vertContent, 0),
+                                                               (*env).GetStringUTFChars(fragContent, 0));
+}

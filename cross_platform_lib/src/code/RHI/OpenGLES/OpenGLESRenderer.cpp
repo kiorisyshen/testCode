@@ -148,13 +148,11 @@ static bool LoadShaderProgram(const ShaderSourceList &source, GLuint &shaderProg
 
     for (auto it = source.cbegin(); it != source.cend(); it++) {
         GLuint shader;
-        std::string filename = "src/code/Asset/Shaders/WebGL/";
-        filename += it->second;
-        std::string fileContent = SyncOpenAndReadTextFileToString(filename.c_str());
+        std::string fileContent = it->second;
 
         status = LoadShaderFromString(fileContent, it->first, shader);
         if (!status) {
-            std::cerr << "Error in loading shader file: " << filename << std::endl;
+            std::cerr << "Error in loading shader:" << std::endl;
             std::cerr << fileContent << std::endl;
             return false;
         }
@@ -210,24 +208,28 @@ void OpenGLESRenderer::initialize() {
     glClearDepthf(1.0f);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-
-    // initialize shaders
-    // ShaderSourceList list = {
-    //     {GL_VERTEX_SHADER, "testShader.vert.glsl"},
-    //     {GL_FRAGMENT_SHADER, "testShader.frag.glsl"}};
-
-    // bool result = LoadShaderProgram(list, shaderProgram);
-    // if (!result) {
-    //     std::cerr << "Failed loading shader program!" << std::endl;
-    // } else {
-    //     std::cout << "Successfully load shader program!" << std::endl;
-    // }
-
-    // // Bind vPosition to attribute 0
-    // glBindAttribLocation(shaderProgram, 0, "vPosition");
-    // glBindAttribLocation(shaderProgram, 1, "vColor");
-
     glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
+}
+
+int OpenGLESRenderer::initializeShaderProgramFromString(std::string vertStr, std::string fragStr) {
+     // initialize shaders
+     ShaderSourceList list = {
+         {GL_VERTEX_SHADER, vertStr},
+         {GL_FRAGMENT_SHADER, fragStr}};
+
+     bool result = LoadShaderProgram(list, shaderProgram);
+     if (!result) {
+         std::cerr << "Failed loading shader program!" << std::endl;
+         return 1;
+     } else {
+         std::cout << "Successfully load shader program!" << std::endl;
+     }
+
+     // Bind vPosition to attribute 0
+     glBindAttribLocation(shaderProgram, 0, "vPosition");
+     glBindAttribLocation(shaderProgram, 1, "vColor");
+
+    return 0;
 }
 
 void OpenGLESRenderer::renderFrame() {
@@ -237,23 +239,23 @@ void OpenGLESRenderer::renderFrame() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // glUseProgram(shaderProgram);
+     glUseProgram(shaderProgram);
 
-    // static GLfloat vVertices[] = {0.0f, 0.5f, 0.0f,
-    //                               -0.5f, -0.5f, 0.0f,
-    //                               0.5f, -0.5f, 0.0f};
+     static GLfloat vVertices[] = {0.0f, 0.5f, 0.0f,
+                                   -0.5f, -0.5f, 0.0f,
+                                   0.5f, -0.5f, 0.0f};
 
-    // static GLfloat vColor[] = {1.0f, 0.0f, 0.0f,
-    //                            0.0f, 1.0f, 0.0f,
-    //                            0.0f, 0.0f, 1.0f};
+     static GLfloat vColor[] = {1.0f, 0.0f, 0.0f,
+                                0.0f, 1.0f, 0.0f,
+                                0.0f, 0.0f, 1.0f};
 
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
-    // glEnableVertexAttribArray(0);
+     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
+     glEnableVertexAttribArray(0);
 
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, vColor);
-    // glEnableVertexAttribArray(1);
+     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, vColor);
+     glEnableVertexAttribArray(1);
 
-    // glDrawArrays(GL_TRIANGLES, 0, 3);
+     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glFlush();
 }
