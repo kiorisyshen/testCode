@@ -12,6 +12,7 @@ add_library(
 add_dependencies(
     CppLibManager
     cppLib
+    OpenGLESRHI
 )
 if(BUILD_TEST)
     add_dependencies(CppLibManager PUBLIC unitTest)
@@ -27,6 +28,9 @@ endif(BUILD_TEST)
 target_link_libraries(
     CppLibManager
     PUBLIC cppLib
+    PUBLIC OpenGLESRHI
+    PRIVATE GLESv2
+    PRIVATE log
 )
 
 if(BUILD_TEST)
