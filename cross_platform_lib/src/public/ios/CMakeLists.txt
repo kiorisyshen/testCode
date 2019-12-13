@@ -60,7 +60,7 @@ else()
         ${PROJECT_SOURCE_DIR}/src/code/Asset/Shaders/Metal/${SHADER_SOURCES}.metal
         CACHE INTERNAL "RESOURCE_FILES"
     )
-endif(BUILD_TEST)
+endif()
 
 find_library(APPLE_UIKit NAMES UIKit)
 find_library(APPLE_CoreGraphics NAMES CoreGraphics)
