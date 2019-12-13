@@ -370,7 +370,7 @@ while getopts ":hcmp:uts" opt; do
                         ISSUE_ANDROID_BUILD=true
                         ISSUE_IOS_BUILD=true
                         ISSUE_DESKTOP_BUILD=true
-                        ISSUE_WEB_BUILD=false
+                        ISSUE_WEB_BUILD=true
                     ;;
                 esac
             done
