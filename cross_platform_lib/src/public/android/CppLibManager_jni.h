@@ -1,0 +1,11 @@
+//
+// Created by sijie.shen on 2019-12-11.
+//
+
+#ifndef CPPLIBMANAGER_JNI_CPPLIBMANAGER_JNI_H
+#define CPPLIBMANAGER_JNI_CPPLIBMANAGER_JNI_H
+
+class CppLibManager_jni {
+};
+
+#endif  //CPPLIBMANAGER_JNI_CPPLIBMANAGER_JNI_H

@@ -1,0 +1,11 @@
+
+if(${TARGET_PLATFORM} MATCHES "desktop")
+    add_subdirectory(desktop)
+elseif(${TARGET_PLATFORM} MATCHES "ios")
+    add_subdirectory(ios)
+elseif(${TARGET_PLATFORM} MATCHES "web")
+    add_subdirectory(web)
+elseif(${TARGET_PLATFORM} MATCHES "android")
+    # do nothing here
+    # already created project
+endif()

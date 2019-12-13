@@ -6,10 +6,11 @@
 // #include "testVector.hpp"
 // #include "testCppVersion.hpp"
 // #include "testOpencvCalc.hpp"
-#include "testOutputImageType.hpp"
+// #include "testOutputImageType.hpp"
+#include "testAssert.hpp"
 
 int main() {
-  RUN_test();
+    RUN_test();
 
-  return 0;
+    return 0;
 }
