@@ -229,7 +229,13 @@ function build_android_target {
     cd $PROJECT_ROOT/platformTest/android
 
     if [[ "$BUILD_COMMAND" != "None" ]]; then
-        ./gradlew :cpplibmanager:bundle$1
+        # gradle build debug task name: bundleDebugAar
+        local gradle_build_task=$1
+        if [[ "$lc_target" == "debug" ]]; then
+            gradle_build_task=$1Aar
+        fi
+
+        ./gradlew :cpplibmanager:bundle$gradle_build_task
 
         echo "Installing ${lc_target} in $PROJECT_ROOT/Product/android/${lc_target}..."
         mkdir -p $PROJECT_ROOT/Product/android/${lc_target}
