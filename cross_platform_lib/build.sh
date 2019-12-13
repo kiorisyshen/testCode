@@ -239,7 +239,7 @@ function build_android_target {
 
         echo "Installing ${lc_target} in $PROJECT_ROOT/Product/android/${lc_target}..."
         mkdir -p $PROJECT_ROOT/Product/android/${lc_target}
-        cp cpplibmanager/build/outputs/aar/*.aar $PROJECT_ROOT/Product/android/${lc_target}
+        cp cpplibmanager/build/outputs/aar/*release.aar $PROJECT_ROOT/Product/android/${lc_target}
     fi
 
     cd $PROJECT_ROOT
