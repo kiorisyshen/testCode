@@ -151,29 +151,29 @@ function build_ios_target {
             echo "============================="
 
             cmake \
-            -G "$BUILD_GENERATOR" \
-            -DCMAKE_BUILD_TYPE=$1 \
-            -DBUILD_TEST=$flag_build_tests \
-            -DCMAKE_INSTALL_PREFIX=$product_dir \
-            -DCMAKE_SYSTEM_NAME=iOS \
-            -DTARGET_PLATFORM=ios \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=9.3 \
-            -DCMAKE_IOS_INSTALL_COMBINED=YES \
-            "-DCMAKE_OSX_ARCHITECTURES=armv7;armv7s;arm64;x86_64" \
-            -DDEVELOPMENT_TEAM_ID=${teamids[$teamidx]} \
-            ../..
+                -G "$BUILD_GENERATOR" \
+                -DCMAKE_BUILD_TYPE=$1 \
+                -DBUILD_TEST=$flag_build_tests \
+                -DCMAKE_INSTALL_PREFIX=$product_dir \
+                -DCMAKE_SYSTEM_NAME=iOS \
+                -DTARGET_PLATFORM=ios \
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=9.3 \
+                -DCMAKE_IOS_INSTALL_COMBINED=YES \
+                "-DCMAKE_OSX_ARCHITECTURES=armv7;armv7s;arm64;x86_64" \
+                -DDEVELOPMENT_TEAM_ID=${teamids[$teamidx]} \
+                ../..
         else
             cmake \
-            -G "$BUILD_GENERATOR" \
-            -DCMAKE_BUILD_TYPE=$1 \
-            -DBUILD_TEST=$flag_build_tests \
-            -DCMAKE_INSTALL_PREFIX=$product_dir \
-            -DCMAKE_SYSTEM_NAME=iOS \
-            -DTARGET_PLATFORM=ios \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=9.3 \
-            -DCMAKE_IOS_INSTALL_COMBINED=YES \
-            "-DCMAKE_OSX_ARCHITECTURES=armv7;armv7s;arm64;x86_64" \
-            ../..
+                -G "$BUILD_GENERATOR" \
+                -DCMAKE_BUILD_TYPE=$1 \
+                -DBUILD_TEST=$flag_build_tests \
+                -DCMAKE_INSTALL_PREFIX=$product_dir \
+                -DCMAKE_SYSTEM_NAME=iOS \
+                -DTARGET_PLATFORM=ios \
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=9.3 \
+                -DCMAKE_IOS_INSTALL_COMBINED=YES \
+                "-DCMAKE_OSX_ARCHITECTURES=armv7;armv7s;arm64;x86_64" \
+                ../..
         fi
     fi
     
@@ -252,6 +252,9 @@ function build_desktop {
 }
 
 function build_ios {
+    BUILD_GENERATOR=Xcode
+    BUILD_COMMAND=xcodebuild
+
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building ios - Debug"
         build_ios_target "Debug"
@@ -266,7 +269,7 @@ function build_ios {
 function build_android {
     if [[ "$ISSUE_DEBUG_BUILD" == "true" ]]; then
         echo "Building android - Debug"
-        build_android_target "DebugAar"
+        build_android_target "Debug"
     fi
 
     if [[ "$ISSUE_RELEASE_BUILD" == "true" ]]; then
@@ -333,7 +336,7 @@ BUILD_COMMAND=ninja
 
 PROJECT_ROOT="$(pwd)"
 
-while getopts ":hcmp:uts" opt; do
+while getopts ":hcmp:ut" opt; do
     case ${opt} in
         h)
             print_help
@@ -354,8 +357,6 @@ while getopts ":hcmp:uts" opt; do
                 case ${platform} in
                     ios)
                         ISSUE_IOS_BUILD=true
-                        BUILD_GENERATOR=Xcode
-                        BUILD_COMMAND=xcodebuild
                     ;;
                     android)
                         ISSUE_ANDROID_BUILD=true
@@ -381,10 +382,6 @@ while getopts ":hcmp:uts" opt; do
             ;;
         u)
             RUN_TESTS=true
-            ;;
-        s)
-            IOS_BUILD_SIMULATOR=true
-            echo "iOS simulator support enabled."
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -434,13 +431,13 @@ if [[ "$ISSUE_ANDROID_BUILD" == "true" ]]; then
     echo ""
 fi
 
-if [[ "$ISSUE_IOS_BUILD" == "true" ]]; then
-    build_ios
+if [[ "$ISSUE_WEB_BUILD" == "true" ]]; then
+    build_web
     echo ""
 fi
 
-if [[ "$ISSUE_WEB_BUILD" == "true" ]]; then
-    build_web
+if [[ "$ISSUE_IOS_BUILD" == "true" ]]; then
+    build_ios
     echo ""
 fi
 
