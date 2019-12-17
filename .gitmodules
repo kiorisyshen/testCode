@@ -4,3 +4,6 @@
 [submodule "cross_platform_lib/ThirdParty/emsdk"]
 	path = cross_platform_lib/ThirdParty/emsdk
 	url = https://github.com/emscripten-core/emsdk.git
+[submodule "cppMerge/eigen"]
+	path = cppMerge/eigen
+	url = https://gitlab.com/libeigen/eigen.git
