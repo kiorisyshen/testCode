@@ -8,7 +8,7 @@
             "name": "(lldb) Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/test02_Swizzle",
+            "program": "${workspaceFolder}/cppMerge/build/test04_Memory",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

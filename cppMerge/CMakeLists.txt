@@ -9,3 +9,6 @@ project (test)
 # add_executable(test02_Swizzle test02_Swizzle.cpp)
 
 add_executable(test03_Eigen test03_Eigen.cpp)
+add_executable(test04_Memory test04_Memory.cpp)
+add_executable(test05_UUID test05_UUID.cpp)
+add_executable(test06_GeomMath test06_GeomMath.cpp)
