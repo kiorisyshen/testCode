@@ -37,8 +37,9 @@ constexpr int32_t operator"" _i32(const char *s, size_t) {
 }
 
 enum testE : int32_t {
-    type1 = "TYP1"_i32,
-    type2 = "TYP2"_i32,
+    type1      = "TYP1"_i32,
+    type2      = "TYP4"_i32,
+    size_testE = 2,
 };
 
 enum testE1 {
@@ -46,15 +47,27 @@ enum testE1 {
     b,
 };
 
+void enum2str(int32_t in_val, char *out_str) {
+    int32_t t_v = endian_net_unsigned_int<int32_t>(in_val);
+    char *t_str = reinterpret_cast<char *>(&t_v);
+    out_str[0]  = t_str[0];
+    out_str[1]  = t_str[1];
+    out_str[2]  = t_str[2];
+    out_str[3]  = t_str[3];
+    out_str[4]  = '\0';
+}
+
 int main() {
     std::cout << testE::type1 << std::endl;
-    std::cout << testE::type2 << std::endl
+    std::cout << testE::type2 << std::endl;
+    std::cout << testE::size_testE << std::endl
               << std::endl;
 
-    int32_t t1_v = endian_net_unsigned_int<int32_t>(testE::type1);
-    char *t1     = reinterpret_cast<char *>(&t1_v);
-    int32_t t2_v = endian_net_unsigned_int<int32_t>(testE::type2);
-    char *t2     = reinterpret_cast<char *>(&t2_v);
+    char t1[5];
+    enum2str(testE::type1, t1);
+    char t2[5];
+    enum2str(testE::type2, t2);
+
     std::cout << t1 << std::endl;
     std::cout << t2 << std::endl
               << std::endl;
