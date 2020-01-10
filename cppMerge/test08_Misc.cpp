@@ -1,0 +1,52 @@
+#include <cstring>
+#include <iostream>
+
+class test {
+   public:
+    virtual void dump(std::ostream &out) const = 0;
+};
+
+class test2 : public test {
+   public:
+    void dump(std::ostream &out) const override final {
+        out << "hello!" << std::endl;
+    }
+};
+
+class test3 : public test2 {
+   public:
+    virtual void testAB() const = 0;
+};
+
+class test4 : public test3 {
+   public:
+    void testAB() const {
+        std::cout << "hello again!" << std::endl;
+    }
+};
+
+int main() {
+    std::string a = "hello str move";
+    std::string b;
+
+    std::cout << "Before:" << std::endl;
+    std::cout << "a: " << a << std::endl;
+    std::cout << "b: " << b << std::endl;
+
+    b = std::move(a);
+
+    std::cout << "After:" << std::endl;
+    std::cout << "a: " << a << std::endl;
+    std::cout << "b: " << b << std::endl;
+
+    test2 t2;
+    test &t = t2;
+    t.dump(std::cout);
+
+    test4 t4;
+    test3 &t3 = t4;
+    t3.dump(std::cout);
+    t3.testAB();
+
+    return 0;
+}

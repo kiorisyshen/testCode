@@ -47,14 +47,17 @@ enum testE1 {
     b,
 };
 
-void enum2str(int32_t in_val, char *out_str) {
+void enum2str(int32_t in_val, std::string &out_str) {
     int32_t t_v = endian_net_unsigned_int<int32_t>(in_val);
     char *t_str = reinterpret_cast<char *>(&t_v);
-    out_str[0]  = t_str[0];
-    out_str[1]  = t_str[1];
-    out_str[2]  = t_str[2];
-    out_str[3]  = t_str[3];
-    out_str[4]  = '\0';
+    out_str.clear();
+    char tmp[5];
+    tmp[0]  = t_str[0];
+    tmp[1]  = t_str[1];
+    tmp[2]  = t_str[2];
+    tmp[3]  = t_str[3];
+    tmp[4]  = '\0';
+    out_str = tmp;
 }
 
 int main() {
@@ -63,9 +66,9 @@ int main() {
     std::cout << testE::size_testE << std::endl
               << std::endl;
 
-    char t1[5];
+    std::string t1;
     enum2str(testE::type1, t1);
-    char t2[5];
+    std::string t2;
     enum2str(testE::type2, t2);
 
     std::cout << t1 << std::endl;
