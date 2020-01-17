@@ -48,5 +48,17 @@ int main() {
     t3.dump(std::cout);
     t3.testAB();
 
+    std::cout << std::endl;
+    std::cout << "Time test: " << std::endl;
+
+    int year;
+    time_t sekunnit;
+    struct tm *p;
+    time(&sekunnit);
+    p = localtime(&sekunnit);
+
+    year = p->tm_year;
+    std::cout << "Year: " << year << std::endl;
+
     return 0;
 }

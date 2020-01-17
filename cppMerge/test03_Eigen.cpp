@@ -10,6 +10,9 @@ inline void BuildIdentityMatrix(Matrix<T, N, N> &matrix) {
 }
 
 int main() {
+    Eigen::Vector4f v_t(1.0, 1.0, 1.0, 1.0);
+    std::cout << v_t << std::endl;
+
     Eigen::Vector3f va(1, 1, 1);
     Eigen::Vector3f vb(1, 2, 3);
     std::cout << vb.dot(va) << std::endl;
