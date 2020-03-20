@@ -8,7 +8,7 @@
             "name": "(lldb) Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/cppMerge/build/test04_Memory",
+            "program": "${workspaceFolder}/Interpreter/build/testVM",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

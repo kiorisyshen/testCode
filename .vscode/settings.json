@@ -93,6 +93,7 @@
         "variant": "cpp",
         "*.ipp": "cpp",
         "hash_map": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "*.inc": "cpp"
     }
 }
