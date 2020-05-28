@@ -7,7 +7,9 @@
 // #include "testCppVersion.hpp"
 // #include "testOpencvCalc.hpp"
 // #include "testOutputImageType.hpp"
-#include "testAssert.hpp"
+// #include "testAssert.hpp"
+// #include "testOpencvMat.hpp"
+#include "testOpencvDLT.hpp"
 
 int main() {
     RUN_test();

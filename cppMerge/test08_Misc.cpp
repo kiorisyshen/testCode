@@ -25,7 +25,28 @@ class test4 : public test3 {
     }
 };
 
+class testRefMember {
+   public:
+    void setRef(const std::string &str) {
+        m_str = &str;
+    }
+
+    void print() {
+        std::cout << *m_str << std::endl;
+    }
+
+   private:
+    const std::string *m_str;
+};
+
 int main() {
+    testRefMember testRef;
+    std::string demoStr = "hello ref member";
+    testRef.setRef(demoStr);
+    testRef.print();
+    demoStr = "hello ref member 2";
+    testRef.print();
+
     std::string a = "hello str move";
     std::string b;
 

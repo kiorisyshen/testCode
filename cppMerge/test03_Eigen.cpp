@@ -28,6 +28,13 @@ int main() {
     std::cout << "m3: " << std::endl
               << m3 << std::endl;
 
+    Eigen::Vector3f vCol = m3.col(0);
+    std::cout << "vCol: " << vCol << std::endl;
+
+    vCol << 3, 2, 1;
+    m3.col(0) = vCol;
+    std::cout << "Replace m3 first col: " << m3 << std::endl;
+
     Eigen::Matrix4f m;
     m << 1, 2, 3, 4,
         5, 6, 7, 8,

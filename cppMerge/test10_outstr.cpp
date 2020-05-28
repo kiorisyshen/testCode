@@ -25,4 +25,11 @@ int main() {
     testStr a;
     std::cout << a;
     std::cout << a.toString();
+
+    std::string msg = "";
+    const char *m1  = "hello";
+    const char *m2  = " string";
+    msg += m1;
+    msg += m2;
+    std::cout << msg << std::endl;
 }
