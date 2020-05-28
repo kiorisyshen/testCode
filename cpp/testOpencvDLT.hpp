@@ -102,6 +102,25 @@ int RUN_test() {
     }
 
     {  // new
+        cv::Mat PA  = (cv::Mat_<double>(3, 1) << x1.x, x1.y, 1.0);
+        cv::Mat PAx = cv::sfm::skew(PA);
+
+        cv::Mat PB  = (cv::Mat_<double>(3, 1) << x2.x, x2.y, 1.0);
+        cv::Mat PBx = cv::sfm::skew(PB);
+
+        cv::Mat MA, MB;
+        cv::hconcat(R1.inv(), -R1.inv() * T1, MA);
+        cv::hconcat(R2.inv(), -R2.inv() * T2, MB);
+
+        cv::Mat A;
+        cv::vconcat(PAx * K * MA, PBx * K * MB, A);
+
+        cv::Vec4d P;
+        cv::SVD::solveZ(A, P);
+
+        cv::Vec3d point3d(P[0] / P[3], P[1] / P[3], P[2] / P[3]);
+
+        std::cout << point3d << std::endl;
     }
 
     return 0;
