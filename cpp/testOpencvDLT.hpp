@@ -1,7 +1,6 @@
 #include <cmath>
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <opencv2/sfm/numeric.hpp>
 
 using namespace std;
 
@@ -56,6 +55,10 @@ void triangulateDLT(const cv::Vec2d &xl, const cv::Vec2d &xr,
     homogeneousToEuclidean(XHomogeneous, point3d);
 }
 
+cv::Mat getSkewMat64(double x, double y, double z) {
+    return (cv::Mat_<double>(3, 3) << 0.0, -z, y, z, 0.0, -x, -y, x, 0.0);
+}
+
 const double deltaTx     = 4.0;
 const double deltaTy     = 4.0;
 const double focusLength = sqrt(2.0);
@@ -102,11 +105,8 @@ int RUN_test() {
     }
 
     {  // new
-        cv::Mat PA  = (cv::Mat_<double>(3, 1) << x1.x, x1.y, 1.0);
-        cv::Mat PAx = cv::sfm::skew(PA);
-
-        cv::Mat PB  = (cv::Mat_<double>(3, 1) << x2.x, x2.y, 1.0);
-        cv::Mat PBx = cv::sfm::skew(PB);
+        cv::Mat PAx = getSkewMat64(x1.x, x1.y, 1.0);
+        cv::Mat PBx = getSkewMat64(x2.x, x2.y, 1.0);
 
         cv::Mat MA, MB;
         cv::hconcat(R1.inv(), -R1.inv() * T1, MA);
