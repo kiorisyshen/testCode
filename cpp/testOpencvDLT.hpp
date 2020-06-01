@@ -59,29 +59,41 @@ cv::Mat getSkewMat64(double x, double y, double z) {
     return (cv::Mat_<double>(3, 3) << 0.0, -z, y, z, 0.0, -x, -y, x, 0.0);
 }
 
-const double deltaTx     = 4.0;
-const double deltaTy     = 4.0;
-const double focusLength = sqrt(2.0);
+const double focusLength = 1.0;
 const double imgWidth    = 4.0;
 const double imgHeight   = 4.0;
 
 int RUN_test() {
-    cv::Point2d x1(imgWidth * 3.0 / 4.0, imgHeight * 3.0 / 4.0);
-    cv::Point2d x2(imgWidth / 4.0, imgHeight / 4.0);
+    cv::Point2d x1(imgWidth / 2.0, imgHeight / 2.0);
+    cv::Point2d x2(imgWidth / 2.0, imgHeight / 2.0);
     cv::Mat K = (cv::Mat_<double>(3, 3) << focusLength, 0, imgWidth * 0.5, 0, focusLength, imgHeight * 0.5, 0, 0, 1.0);
     cv::Mat R1, R2;
     cv::Mat T1, T2;
 
     {
-        double yaw    = 0;
-        double roll   = 0;
-        double pitch  = 0;
-        cv::Mat euler = (cv::Mat_<double>(1, 3) << pitch, roll, yaw);
-        cv::Rodrigues(euler, R1);
-        cv::Rodrigues(euler, R2);
+        {
+            double yaw    = 0;
+            double roll   = 0;
+            double pitch  = 0;
+            cv::Mat euler = (cv::Mat_<double>(1, 3) << pitch, roll, yaw);
+            cv::Rodrigues(euler, R1);
+        }
+
+        {
+            double yaw    = M_PI / 4.0;
+            double roll   = 0;
+            double pitch  = 0;
+            cv::Mat euler = (cv::Mat_<double>(1, 3) << pitch, roll, yaw);
+            cv::Rodrigues(euler, R2);
+        }
 
         T1 = (cv::Mat_<double>(3, 1) << 0, 0, 0);
-        T2 = (cv::Mat_<double>(3, 1) << deltaTx, deltaTy, 0);
+        T2 = (cv::Mat_<double>(3, 1) << 2, 0, 2);
+
+        {
+            cv::Mat testPT = (cv::Mat_<double>(3, 1) << 1, 1, 0);
+            std::cout << R2 * testPT << std::endl;
+        }
     }
 
     {  // original
@@ -104,7 +116,7 @@ int RUN_test() {
         std::cout << point3d << std::endl;
     }
 
-    {  // new
+    {  // new 1
         cv::Mat PAx = getSkewMat64(x1.x, x1.y, 1.0);
         cv::Mat PBx = getSkewMat64(x2.x, x2.y, 1.0);
 
@@ -114,6 +126,30 @@ int RUN_test() {
 
         cv::Mat A;
         cv::vconcat(PAx * K * MA, PBx * K * MB, A);
+
+        cv::Vec4d P;
+        cv::SVD::solveZ(A, P);
+
+        cv::Vec3d point3d(P[0] / P[3], P[1] / P[3], P[2] / P[3]);
+
+        std::cout << point3d << std::endl;
+    }
+
+    {  // new 2
+        cv::Mat KPA = (cv::Mat_<double>(3, 1) << x1.x, x1.y, 1.0);
+        cv::Mat KPB = (cv::Mat_<double>(3, 1) << x2.x, x2.y, 1.0);
+        KPA         = K.inv() * KPA;
+        KPB         = K.inv() * KPB;
+
+        cv::Mat PAx = getSkewMat64(KPA.at<double>(0, 0), KPA.at<double>(1, 0), KPA.at<double>(2, 0));
+        cv::Mat PBx = getSkewMat64(KPB.at<double>(0, 0), KPB.at<double>(1, 0), KPB.at<double>(2, 0));
+
+        cv::Mat MA, MB;
+        cv::hconcat(R1.inv(), -R1.inv() * T1, MA);
+        cv::hconcat(R2.inv(), -R2.inv() * T2, MB);
+
+        cv::Mat A;
+        cv::vconcat(PAx * MA, PBx * MB, A);
 
         cv::Vec4d P;
         cv::SVD::solveZ(A, P);
